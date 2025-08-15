@@ -83,10 +83,8 @@ export const findAllUsersRecordTypeController = async (
   try {
     const list = await findAllUsersRecordType({
       where: {
-        // state: Number(req.query.state),
         origin: {
           [Op.and]: {
-            [Op.not]: null,
             [Op.in]: ["google", "facebook", "correo"],
           },
         },

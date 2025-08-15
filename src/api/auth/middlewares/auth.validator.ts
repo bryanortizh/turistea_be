@@ -5,9 +5,6 @@ import {
   existsEmailOfAdmin,
   RegexValidNewPassword,
 } from "../../admin/validator/admin.custom";
-import { existsProvincia } from "../../ubicacion/validator/provincia.custom";
-import { existsDistrito } from "../../ubicacion/validator/distrito.custom";
-import { existsDepartamento } from "../../ubicacion/validator/departamento.custom";
 
 export const signupValidator = [
   body("email")

@@ -151,7 +151,6 @@ export const updatePasswordUserValidator = [
     .custom(RegexValidNewPassword),
     // .custom((pass:string )=>{
     //   const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/)
-    //   console.log("regex",regex.test(pass))
       
     //   if(regex.test(pass) == false) throw new Error('Mínimo 8 caracteres al menos 1 alfabeto en mayúscula, 1 alfabeto en minúscula, 1 número y 1 carácter especial:')
     // }),

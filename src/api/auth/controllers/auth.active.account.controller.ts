@@ -10,11 +10,6 @@ export const ActiveAccountUserController = async (
   ) => {
     try {
       const { email } = req.body
-      // const { option } = req.query
-      // let message = ''
-      // if(option == 'restore'){
-      //   message:'¡Codigo de verificación correcto!'
-      // }
       await updateUserStateCodeVerification({state:true,email})
       res.status(200).json({code_verification:req.body.code_verification,message:'¡Código de verificación correcto!'})
       

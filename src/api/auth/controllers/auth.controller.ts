@@ -5,7 +5,6 @@ import { NextFunction, Request, Response } from "express";
 import {
   createUserAndSendCodeVerificationToMail,
   createNewUser,
-  // , createUserAndSendMail
 } from "../../user/services/user.service";
 import {
   signInAdminService,
@@ -15,25 +14,12 @@ import {
 import { googleSignInService } from "../services/auth.service";
 import { createAdminAndSendMail } from "../../admin/services/admin.service";
 import rn from "random-number";
-// import { IToken } from '../passport/passport'
 import { TokenAttributes } from "../../token/models/token.model";
 import { findTokenByUUID } from "../../token/services/find";
 import { closeAllSession } from "../../token/services/update";
 import config from "../../../config/environments/index";
 import jwt from "jsonwebtoken";
 import { findUserByEmailWithoutState } from "../../user/services/find/index";
-
-//*@DESC  Signup of users with local strategy
-// export const signUpController = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     await createUserAndSendMail(req.body)
-//     res.status(200).json('¡usuario creado!')
-//   } catch (err: any) {
-//     if (err instanceof sequelize.ValidationError) next(createError(400, err))
-
-//     next(createError(404, err))
-//   }
-// }
 export const signUpController = async (
   req: Request,
   res: Response,
@@ -48,12 +34,6 @@ export const signUpController = async (
       sexo,
       password,
       date_of_birth,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       key,
     } = req.body;
 
@@ -61,10 +41,6 @@ export const signUpController = async (
       max = 9998,
       min = 1001,
     }
-
-    // const code_verification = Math.floor(
-    //   Math.random() * (opt.max - opt.min + 1) + opt.min
-    // ).toString()
 
     const gen = rn.generator({
       min: opt.min,
@@ -83,12 +59,6 @@ export const signUpController = async (
       code_verification: code,
       date_of_birth,
       state: false,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       key,
     });
 
@@ -163,7 +133,6 @@ export const signOutController = async (
   }
 };
 
-//*@DESC Signin of users with google oauth2
 export const googleSignInController = async (
   req: Request,
   res: Response,
@@ -177,7 +146,6 @@ export const googleSignInController = async (
     next(createError(404, err));
   }
 };
-//*@DESC  Signup of administrators with the local strategy
 export const signUpAdminController = async (
   req: Request,
   res: Response,
@@ -223,12 +191,6 @@ export const signInSocialNetworkController = async (
       dni,
       key,
       date_of_birth,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       origin,
     } = req.body;
     // res.status(200).json({
@@ -253,7 +215,6 @@ export const signInSocialNetworkController = async (
     });
     // Validar si el correo ya tiene una cuenta ?
     const userExisted = await findUserByEmailWithoutState({ email });
-    console.log("usuario existe", userExisted);
     if (userExisted) {
       let userId = userExisted.id as number;
       let number_of_sessions = userExisted.number_of_sessions as number;
@@ -275,13 +236,6 @@ export const signInSocialNetworkController = async (
         password,
         dni,
         date_of_birth,
-        code_departamento,
-        code_provincia,
-        ubigeo,
-        key,
-        name_departamento,
-        name_provincia,
-        name_distrito,
         state: true,
         origin,
       });
@@ -309,7 +263,6 @@ export const validarEmailUser = async (
   try {
     const { email, password } = req.body;
     const userExisted = await findUserByEmailWithoutState({ email });
-    console.log("usuario existe", userExisted);
     if (userExisted) {
       let userId = userExisted.id as number;
       let number_of_sessions = userExisted.number_of_sessions as number;
@@ -377,12 +330,6 @@ export const signInSocialNetworkControllerWithoutValidation = async (
       date_of_birth,
       state: true,
       origin,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       key,
     });
     let userId = user.id as number;

@@ -114,7 +114,7 @@ export const createAdminIntranetAndSendMailService = async ({
       admin,
       adminId,
     })
-    await sendMailAxios({
+  /*   await sendMailAxios({
       title: 'Hola ' + _admin.name + ', tu nueva contraseña es:  ' + password,
       to: _admin.email!,
       template: template_create_admin({
@@ -123,7 +123,7 @@ export const createAdminIntranetAndSendMailService = async ({
         banner:
           'https://images.pexels.com/photos/1321943/pexels-photo-1321943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
       }),
-    })
+    }) */
     return { admin: _admin }
   } catch (err) {
     throw err

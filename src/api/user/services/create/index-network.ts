@@ -15,12 +15,6 @@ export const createUserNetwork = async ({
   code_verification,
   state,
   origin,
-  code_departamento,
-  code_provincia,
-  ubigeo,
-  name_departamento,
-  name_provincia,
-  name_distrito,
   key,
   path,
   size,
@@ -36,12 +30,6 @@ export const createUserNetwork = async ({
   code_verification?: string;
   state?: boolean;
   origin?: string;
-  code_departamento?: number;
-  code_provincia?: number;
-  ubigeo?: number;
-  name_departamento?: string;
-  name_provincia?: string;
-  name_distrito?: string;
   path?: string;
   key?: string;
   size?: string;
@@ -71,12 +59,6 @@ export const createUserNetwork = async ({
       code_verification,
       state,
       origin,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       size,
       path,
       key,

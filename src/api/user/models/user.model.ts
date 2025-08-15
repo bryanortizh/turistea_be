@@ -28,15 +28,8 @@ export interface UserAttributes {
   ext?: string;
   path?: string;
   number_of_sessions?: number;
-  //Days of session and date
   user_session_day?: number;
   date_user_session_day?: Date;
-  code_departamento?: number;
-  code_provincia?: number;
-  ubigeo?: number;
-  name_departamento?: string;
-  name_provincia?: string;
-  name_distrito?: string;
   device_id?: string;
   origin?: string;
   terms_and_conditions?: boolean;
@@ -59,15 +52,16 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
         autoIncrement: true,
       },
       user_session_day: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
       },
       terms_and_conditions: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: DataTypes.TINYINT("1"),
+        defaultValue: 0,
         allowNull: false,
       },
       date_user_session_day: {
         type: DataTypes.DATEONLY,
+        allowNull: true,
       },
       device_id: {
         type: DataTypes.STRING(250),
@@ -138,12 +132,12 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
         type: DataTypes.STRING(100),
       },
       state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+        type: DataTypes.TINYINT("1"),
+        defaultValue: 1,
       },
       nightmode: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: DataTypes.TINYINT("1"),
+        defaultValue: 0,
       },
       number_of_sessions: {
         type: DataTypes.INTEGER,
@@ -160,30 +154,6 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       size: {
         type: DataTypes.STRING(30),
         allowNull: true,
-      },
-      code_departamento: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      code_provincia: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      ubigeo: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      name_departamento: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
-      },
-      name_provincia: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
-      },
-      name_distrito: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
       },
       ext: {
         type: DataTypes.STRING(10),

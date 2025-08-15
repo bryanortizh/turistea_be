@@ -1,7 +1,7 @@
 import { DataBase } from "../../../../database/index";
 import { UserAttributes } from "../../models/user.model";
 import sequelize, { Op, WhereOptions } from "sequelize";
-import { FindAttributeOptions, Order } from "sequelize/types";
+import { FindAttributeOptions, Order } from "sequelize";
 
 export const findUserByEmail = async ({
   email,
@@ -189,24 +189,21 @@ export const SearchUser = async ({
 }) => {
   try {
     const limit: number = 12;
+    const where: any = {
+      state: true,
+    };
+
+    if (regex) {
+      where[Op.or] = [
+        { name: { [Op.regexp]: regex } },
+        { lastname: { [Op.regexp]: regex } }
+      ];
+      // Only add id and dni if they are strings in your DB, otherwise skip them
+      // If you want to search numeric fields, consider using Op.like or Op.eq with parsed numbers
+    }
+
     const users = await DataBase.instance.user.findAll({
-      where: {
-        state: true,
-        [Op.or]: {
-          id: {
-            [Op.regexp]: regex,
-          },
-          name: {
-            [Op.regexp]: regex,
-          },
-          dni: {
-            [Op.regexp]: regex,
-          },
-          lastname: {
-            [Op.regexp]: regex,
-          },
-        },
-      },
+      where,
       attributes: {
         exclude: [
           "password",

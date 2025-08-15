@@ -1,12 +1,4 @@
 import { Router } from "express";
-import { findAllDepartamentoTypeController } from "../../ubicacion/controllers/departamento.controller";
-import { findAllDistritoController } from "../../ubicacion/controllers/distrito.controller";
-import { findAllProvinciaController } from "../../ubicacion/controllers/provincia.controller";
-import {
-  findAllDepartamentoUbigeoTypeController,
-  findAllDistritoUbigeoController,
-  findAllProvinciaUbigeoController,
-} from "../../ubigeo/controllers/ubigeo_map.controller";
 import {
   ActiveAccountUserValidator,
   EmailUserValidator,
@@ -49,10 +41,6 @@ router.post(
   "/singup-social-network-user",
   signInSocialNetworkControllerWithoutValidation
 );
-router.get("/departamentos", findAllDepartamentoUbigeoTypeController);
-router.get("/provincias", findAllProvinciaUbigeoController);
-router.get("/distritos", findAllDistritoUbigeoController);
-
 router.get("/signout", signoutValidator, signOutController);
 
 //* session admin!
