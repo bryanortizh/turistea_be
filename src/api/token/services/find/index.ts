@@ -115,7 +115,6 @@ export const gethoursOfUseInTheWeek = async ({
           ),
         ],
       },
-      // logging:console.log
     });
     return data;
   } catch (err) {
@@ -188,7 +187,6 @@ export const gethoursOfUseInTheMonth = async ({
           ),
         ],
       },
-      // logging:console.log
     });
     return data;
   } catch (err) {
@@ -255,7 +253,6 @@ export const getUseRegularFrecuencyReport = async ({
         },
       },
       group: ["userId"],
-      /*  logging:console.log */
     });
 
     // const count_total = await DataBase.instance.metrics.findAll({
@@ -274,7 +271,6 @@ export const getUseRegularFrecuencyReport = async ({
     //     }
     //   },
 
-    //   logging:console.log
     // })
     return useFrecuencyReport;
   } catch (error) {

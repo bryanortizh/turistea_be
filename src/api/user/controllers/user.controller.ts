@@ -217,12 +217,10 @@ export const udpateDaySessionUserController = async (
   try {
     const { userId } = req.user as IToken;
     const convertToday = moment().local().format("YYYY-MM-DD");
-    // console.log(moment(convertToday).toDate())
     const profileUser = await findUserById({
       id: userId,
       attributes: ["user_session_day", "date_user_session_day"],
     });
-    // console.log(profileUser?.date_user_session_day?.toString())
     if (
       profileUser.user_session_day == null &&
       profileUser.date_user_session_day == null
@@ -359,7 +357,6 @@ export const updateImagePerfilServiceController = async (
       image: req.body.image as Buffer,
       userId: user.userId,
     });
-    console.log(results, "esto manda imagen");
     res.status(200).json(results);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
