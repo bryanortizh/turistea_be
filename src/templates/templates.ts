@@ -374,10 +374,10 @@ lang="en" xml:lang="en" style="min-height: 100%; background-color: #fff;" xml:la
                               align="left">
                                 <center data-parsed="" style="min-width: 640px; width: 100%;">
                                   <img src="https://i.ibb.co/JzTxzCF/logo-nika.png"
-                                  alt="Bienvenido a Nika" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 22%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
+                                  alt="Bienvenido a Turistea" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 22%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
                                   />
                                   <!-- <img src="${vars.banner}"
-                                  alt="Bienvenido a Nika" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
+                                  alt="Bienvenido a Turistea" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
                                   /> -->
                                 </center>
                               </th>
@@ -428,7 +428,7 @@ lang="en" xml:lang="en" style="min-height: 100%; background-color: #fff;" xml:la
 
                                 <h5 class="text-center serif small-text-left" style="text-align: center;-webkit-hyphens: none; color: inherit; font-family: rubik;
                                 font-size: 25px; font-weight: 400; hyphens: none; letter-spacing: .02em; line-height: 1.1em; word-wrap: normal; margin: 0; padding: 0;"
-                                align="center">Nika te da la bienvenida ${vars.names} este es tu primer paso de un gran cambio</h5>
+                                align="center">Turistea te da la bienvenida ${vars.names} este es tu primer paso de un gran cambio</h5>
                               </th>
                             </tr>
                           </table>
@@ -1200,10 +1200,10 @@ export const template_create_user = (vars: ITemplate) => {
                                 align="left">
                                   <center data-parsed="" style="min-width: 640px; width: 100%;">
                                     <img src="https://i.ibb.co/JzTxzCF/logo-nika.png"
-                                    alt="Bienvenido a Nika" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 22%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
+                                    alt="Bienvenido a Turistea" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 22%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
                                     />
                                     <!-- <img src="${vars.banner}"
-                                    alt="Bienvenido a Nika" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
+                                    alt="Bienvenido a Turistea" align="center" class="float-center" style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: 0; text-align: center; text-decoration: none; width: auto; margin: 0 auto;"
                                     /> -->
                                   </center>
                                 </th>

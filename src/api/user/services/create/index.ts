@@ -14,8 +14,6 @@ export const createUser = async ({
   code_verification,
   state,
   origin,
-  key,
-  size,
 }: {
   name?: string;
   lastname?: string;
@@ -28,8 +26,6 @@ export const createUser = async ({
   state?: boolean;
   origin?: string;
   path?: string;
-  key?: string;
-  size?: string;
 }) => {
   try {
     const salt = CryptoJS.lib.WordArray.random(30);
@@ -56,8 +52,6 @@ export const createUser = async ({
       code_verification,
       state,
       origin,
-      size,
-      key,
     });
   } catch (err) {
     throw err;

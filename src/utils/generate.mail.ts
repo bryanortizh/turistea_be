@@ -30,7 +30,6 @@ export const sendEmail = async ({
         service: config.SEND_TRANSPORTER,
         auth: {
           user: config.SENDER,
-          pass: config.SENDER_PASS,
         },
       })
       const mailOptions = {
