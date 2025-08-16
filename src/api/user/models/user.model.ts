@@ -161,7 +161,7 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       },
       key: {
         type: DataTypes.STRING(150),
-        allowNull: false,
+        allowNull: true,
       },
       path: {
         type: DataTypes.STRING(500),

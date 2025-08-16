@@ -1,6 +1,5 @@
 import sequelize from "sequelize";
 import createError from "http-errors";
-
 import { NextFunction, Request, Response } from "express";
 import {
   createUserAndSendCodeVerificationToMail,
@@ -20,6 +19,7 @@ import { closeAllSession } from "../../token/services/update";
 import config from "../../../config/environments/index";
 import jwt from "jsonwebtoken";
 import { findUserByEmailWithoutState } from "../../user/services/find/index";
+
 export const signUpController = async (
   req: Request,
   res: Response,
@@ -34,7 +34,6 @@ export const signUpController = async (
       sexo,
       password,
       date_of_birth,
-      key,
     } = req.body;
 
     enum opt {
@@ -59,7 +58,6 @@ export const signUpController = async (
       code_verification: code,
       date_of_birth,
       state: false,
-      key,
     });
 
     res

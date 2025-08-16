@@ -63,24 +63,6 @@ export const signupValidator = [
     .withMessage("Tiene que tener de 6 a 16 digitos")
     .bail()
     .custom(RegexValidNewPassword),
-
-  body("code_departamento")
-    .isNumeric()
-    .withMessage("Se requiere un departamento")
-    .bail()
-    .optional({ nullable: true }),
-
-  body("code_provincia")
-    .isNumeric()
-    .withMessage("Se requiere una provincia")
-    .bail()
-    .optional({ nullable: true }),
-
-  body("ubigeo")
-    .isNumeric()
-    .withMessage("Se requiere un distrito")
-    .bail()
-    .optional({ nullable: true }),
   // .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
   // .withMessage('Se requiere al menos un numero y un caracter especial'),
   allValidator,

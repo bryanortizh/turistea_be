@@ -95,23 +95,6 @@ export const amountIntUser = async ({
   }
 };
 
-// export const createUserAndSendMail = async (user: UserAttributes) => {
-//   try {
-//     const _user: UserAttributes = await createUser(user)
-//     return await sendMailAxios({
-//       template: template_create_user({
-//         names: _user.name + ' ' + _user.lastname,
-//         banner:
-//           'https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-//       }),
-//       title: '[MIYUNTA]  Bienvenido al Sistema de Bryan Dev',
-//       to: _user.email!,
-//     })
-//   } catch (err) {
-//     throw err
-//   }
-// }
-
 export const createUserAndSendCodeVerificationToMail = async (
   user: UserAttributes
 ) => {
@@ -124,7 +107,7 @@ export const createUserAndSendCodeVerificationToMail = async (
         banner:
           "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
       }),
-      title: `[NIKA] Código de verificación`,
+      title: `[TURISTEA] Código de verificación`,
 
       to: _user.email!,
     });
