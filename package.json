@@ -1,5 +1,6 @@
 {
   "name": "turistea-be",
+  "version": "0.0.2",
   "author": "Bryan Ortiz",
   "main": "index.js",
   "dependencies": {
