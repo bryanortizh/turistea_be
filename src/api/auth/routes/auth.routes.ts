@@ -46,7 +46,7 @@ router.get("/signout", signoutValidator, signOutController);
 //* session admin!
 
 //*@POST /api/admin-signup
-// router.post('/admin-signup', signinAdminValidator, signUpAdminController)
+router.post('/admin-signup', signinAdminValidator, signUpAdminController)
 router.post("/admin-signin", signupAdminValidator, signInAdminController);
 
 router.post(

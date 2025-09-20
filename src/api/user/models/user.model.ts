@@ -66,10 +66,6 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       device_id: {
         type: DataTypes.STRING(250),
       },
-      dni: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       password: {
         type: DataTypes.STRING(300),
       },
@@ -107,7 +103,10 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
         type: DataTypes.STRING(100),
         defaultValue: "H",
       },
-
+      dni: {
+        type: DataTypes.STRING(11),
+        allowNull: true,
+      },
       numIntentos: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
