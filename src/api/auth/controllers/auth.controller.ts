@@ -31,6 +31,7 @@ export const signUpController = async (
       lastname,
       email,
       cellphone,
+      dni,
       sexo,
       password,
       date_of_birth,
@@ -54,6 +55,7 @@ export const signUpController = async (
       email,
       cellphone,
       sexo,
+      dni,
       password,
       code_verification: code,
       date_of_birth,
@@ -87,6 +89,7 @@ export const signInController = async (
     const jwt = await signInService({ email, password });
     res.status(200).json(jwt);
   } catch (err: any) {
+    console.log(err);
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
