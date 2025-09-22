@@ -34,7 +34,6 @@ export const signupValidator = [
     .not()
     .isEmpty()
     .withMessage("No puede ser vacio"),
-  // .optional({nullable:true}),
 
   body("cellphone")
     .isNumeric()
@@ -46,11 +45,6 @@ export const signupValidator = [
     .toLowerCase()
     .isIn(["hombre", "mujer", "no especificado"])
     .withMessage("Solo se eliguen Hombre y Mujer"),
-  /*   body("dni")
-    .isNumeric()
-    .withMessage("Se require el DNI")
-    .bail()
-    .isLength({ min: 8, max: 8 }), */
   body("password")
     .isString()
     .withMessage("Se require un string")
@@ -63,8 +57,6 @@ export const signupValidator = [
     .withMessage("Tiene que tener de 6 a 16 digitos")
     .bail()
     .custom(RegexValidNewPassword),
-  // .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
-  // .withMessage('Se requiere al menos un numero y un caracter especial'),
   allValidator,
 ];
 export const signinValidator = [
@@ -77,11 +69,7 @@ export const signinValidator = [
     .isEmpty()
     .withMessage("No puede ser vacio")
     .bail(),
-  // .isLength({ min: 10, max: 16 })
-  // .withMessage('Tiene que tener de 10 a 16 digitos')
-  // .bail()
-  // .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
-  // .withMessage('Se requiere al menos un numero y un caracter especial'),
+ 
   allValidator,
 ];
 export const signoutValidator = [
@@ -94,14 +82,6 @@ export const signoutValidator = [
     .withMessage("No puede ser vacio")
     .bail()
     .custom(validateToken),
-  // .custom((authorization, { req }) => req.user.rol !== 'user')
-  // .withMessage('No tiene autorización para esta ruta como usuario'),
-
-  // .isLength({ min: 10, max: 16 })
-  // .withMessage('Tiene que tener de 10 a 16 digitos')
-  // .bail()
-  // .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
-  // .withMessage('Se requiere al menos un numero y un caracter especial'),
   allValidator,
 ];
 
@@ -116,7 +96,6 @@ export const signupAdminValidator = [
     .withMessage("No puede ser vacio"),
   allValidator,
 ];
-//*@DESC Validator data the administrator
 export const signinAdminValidator = [
   body("email")
     .isEmail()

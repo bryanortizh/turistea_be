@@ -4,7 +4,6 @@ import {
   EmailUserValidator,
   newPasswordAndCodeValidator,
 } from "../../user/middlewares/user.validator";
-// import { VerifyEmailUser } from '../../user/validator/user.custom'
 import { ActiveAccountUserController } from "../controllers/auth.active.account.controller";
 import {
   googleSignInController,
@@ -12,7 +11,6 @@ import {
   signInController,
   signOutController,
   signInSocialNetworkController,
-  // signOutUserController,
   signUpAdminController,
   signUpController,
   validarEmailUser,
@@ -43,9 +41,6 @@ router.post(
 );
 router.get("/signout", signoutValidator, signOutController);
 
-//* session admin!
-
-//*@POST /api/admin-signup
 router.post('/admin-signup', signinAdminValidator, signUpAdminController)
 router.post("/admin-signin", signupAdminValidator, signInAdminController);
 
