@@ -58,7 +58,6 @@ export default class Server {
     //*@USE GLOBAL
     this._router.get("/render-image/:image", renderImage);
     this._router.use("/terms-conditions", termsConditions);
-    // this._router.use('/report', routerReport)
     //*@AUTHENTICATE
     this._router.use(passport.authenticate("jwt", { session: false }));
     this._router.use(
@@ -76,9 +75,6 @@ export default class Server {
     this._router.use("/admins", deniedAccessUser, routerAdmin);
     this._router.use("/users-intranet", deniedAccessUser, routerUserIntranet);
 
-    // this._router.use('/user-package', deniedAccessUser, userPackageAdmin)
-
-    // this._router.use('/terms-conditions', deniedAccessUser, termsConditions)
   }
 
   errors(): void {

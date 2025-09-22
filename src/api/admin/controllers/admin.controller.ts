@@ -39,12 +39,11 @@ export const adminProfileController = async (
       where: {
         id: user.userId,
       },
-      attributes: ["name", "lastname", "path", "cellphone", "email", "created"],
+      attributes: ["name", "lastname", "path", "email", "created"],
     });
     res.status(200).json(admin);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
-
     next(createError(404, err));
   }
 };
