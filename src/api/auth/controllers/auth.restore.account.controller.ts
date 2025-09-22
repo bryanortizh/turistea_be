@@ -100,7 +100,7 @@ export const sendCodeVerificationForRestoreAccountUserController = async (
         banner:
           'https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
       }),
-      title: `[NIKA] Código de verificación`,
+      title: `[TURISTEA] Código de verificación`,
       to: email!,
     })
     res.status(200).json(`¡Se te envió un código de verificación al correo ${email}!`)

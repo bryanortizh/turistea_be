@@ -23,7 +23,6 @@ export const ActiveAccountUserValidator = [
   .isEmail()
   .withMessage('Se require un correo valido')
   .bail()
-  // .custom(VerifyEmailUser)
   .not()
   .isEmpty()
   .withMessage('No puede ser vacio')
