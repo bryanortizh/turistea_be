@@ -193,12 +193,6 @@ export const findProfileUserController = async (
         "origin",
         "path",
         "number_of_sessions",
-        "code_departamento",
-        "code_provincia",
-        "ubigeo",
-        "name_departamento",
-        "name_provincia",
-        "name_distrito",
       ],
     });
 

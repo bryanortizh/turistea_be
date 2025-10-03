@@ -72,7 +72,7 @@ export const findAllAdmin = async ({
       ],
       limit,
       offset,
-      order: [['id', 'DESC']],
+      order: [['id', 'ASC']],
     })
     return { page, count, rows }
   } catch (err) {

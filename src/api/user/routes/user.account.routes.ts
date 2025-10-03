@@ -27,4 +27,3 @@ router.put(
 );
 router.put("/terms/conditions", updateTermsAndConditionsController);
 router.put("/image", updateImagePerfil, updateImagePerfilServiceController);
-// router.post('/activate', ActiveAccountUserValidator, ActiveAccountUserController)

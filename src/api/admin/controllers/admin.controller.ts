@@ -113,8 +113,7 @@ export const updateAdminIntranetController = async (
       name: req.body.name,
       lastname: req.body.lastname,
       cellphone: req.body.cellphone,
-      /*       admin_rol_id: req.body.admin_rol_id,
-       */
+      admin_rol_id: req.body.admin_rol_id,
     });
 
     res.status(200).json("Se actualizo el admin");
