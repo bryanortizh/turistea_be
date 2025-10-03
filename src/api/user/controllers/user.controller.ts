@@ -11,7 +11,6 @@ import sequelize, { Op } from "sequelize";
 import {
   updateIdDevice,
   updateUser,
-  updateUserStateCodeVerification,
 } from "../services/update";
 import { IToken } from "../../auth/passport/passport";
 import moment from "moment";
@@ -19,7 +18,6 @@ import {
   updateImagePerfilService,
   updatePasswordUserService,
 } from "../services/user.service";
-// import { UserAttributes } from '../models/user.model'
 
 export const findAllUsersController = async (
   req: Request,
@@ -97,10 +95,8 @@ export const findAllUsersRecordTypeController = async (
         [sequelize.fn("count", sequelize.col("origin")), "quantity"],
       ],
     });
-    //recordType
     let copy_list = JSON.parse(JSON.stringify(list));
     let total = 0;
-    // if( copy_list.length > 0 ){
     if (!copy_list.some((item: any) => item.origin == "google"))
       copy_list = [...copy_list, { origin: "google", quantity: 0 }];
     if (!copy_list.some((item: any) => item.origin == "facebook"))
@@ -112,7 +108,6 @@ export const findAllUsersRecordTypeController = async (
       (total: any, item: any) => total + item?.quantity,
       0
     );
-    // }
     res.status(200).json({ total, data: copy_list });
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

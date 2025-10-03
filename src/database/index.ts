@@ -14,6 +14,8 @@ import {
   TermsAndConditionsFactory,
 } from "../api/terms_and_conditions/models/termsconditions.model";
 import { ActionFactory, ActionStatic } from "../api/action/models/action.model";
+import { DriversFactory, DriversStatic } from "../api/drivers/models/drivers.model";
+import { PackagesFactory, PackagesStatic } from "../api/package/models/package.model";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -25,7 +27,8 @@ export class DataBase {
   public adminRoles: AdminRolesStatic;
   public global: GlobalStatic;
   public termsAndConditions: TermsAndConditionsStatic;
-
+  public drivers: DriversStatic;
+  public packages: PackagesStatic;
   public action: ActionStatic;
 
   constructor() {
@@ -52,7 +55,8 @@ export class DataBase {
     this.global = GlobalFactory(this.sequelize);
     this.termsAndConditions = TermsAndConditionsFactory(this.sequelize);
     this.action = ActionFactory(this.sequelize);
-
+    this.drivers = DriversFactory(this.sequelize);
+    this.packages = PackagesFactory(this.sequelize);
     this.associations();
     this.connectDb();
   }
@@ -69,6 +73,8 @@ export class DataBase {
         this.adminRoles.sync({ alter: true, logging: console.log });
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
+        //this.drivers.sync({ alter: true, logging: console.log });
+        //this.packages.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));
