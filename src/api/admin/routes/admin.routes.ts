@@ -14,8 +14,18 @@ import {
   updatePasswordAdminIntranetValidator,
 } from "../middlewares/admin.validator";
 import { findAllAdminController } from "../controllers/admin.controller";
+import {
+  createDriverController,
+  findAllDriverController,
+  inactiveDriverController,
+  updateDriverController,
+} from "../../drivers/controllers/drivers.controller";
+import {
+  validateCreateDriver,
+  validateUniqueDriverFields,
+  validateUpdateDriver,
+} from "../../drivers/middlewares/drivers.validator";
 export const router: Router = Router();
-
 
 router.get("/profile", adminProfileController);
 router.get("/", listAdminIntranet, findAllAdminController);
@@ -31,4 +41,17 @@ router.put(
   updatePasswordAdminIntranetValidator,
   updatePasswordAdminIntranetController
 );
-router.get("/drivers",)
+router.get("/drivers", findAllDriverController);
+router.post(
+  "/drivers",
+  validateCreateDriver,
+  validateUniqueDriverFields,
+  createDriverController
+);
+router.put(
+  "/drivers/:id",
+  validateUpdateDriver,
+  validateUniqueDriverFields,
+  updateDriverController
+);
+router.put("/drivers-inactive/:id", inactiveDriverController);

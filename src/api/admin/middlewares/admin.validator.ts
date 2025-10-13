@@ -70,16 +70,11 @@ export const updateAdminIntranetValidator = [
     .bail()
     .isLength({ min: 9, max: 9 })
     .withMessage('Se requiere un numero de Peru, 9 digitos'),
-  /*   body('admin_rol_id')
-    .isNumeric()
-    .withMessage('Se require un Id numerico')
-    .bail()
-    .custom(existsRoles), */
   header('authorization').custom(accessOnlyAdminPrimary), //!ADMIN PRIMARY
   allValidator,
 ]
 export const listAdminIntranet = [
-  header('authorization').custom(accessOnlyAdminPrimary), //!ADMIN PRIMARY
+  header('authorization').custom(accessOnlyAdminPrimary),
   allValidator,
 ]
 //*DESC Validator of the archived or unarchived of the questions
@@ -96,7 +91,7 @@ export const archivedOrUnArchivedAdminValidator = [
           'El administrador no existe o esta en estado ' + (req.body.state ? 'activo' : 'archivado')
         )
     }),
-  header('authorization').custom(accessOnlyAdminPrimary), //!ADMIN PRIMARY
+  header('authorization').custom(accessOnlyAdminPrimary), 
   allValidator,
 ]
 
