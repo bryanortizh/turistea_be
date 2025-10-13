@@ -8,16 +8,14 @@ import {
   SearchUser,
 } from "../services/find/index";
 import sequelize, { Op } from "sequelize";
-import {
-  updateIdDevice,
-  updateUser,
-} from "../services/update";
+import { updateIdDevice, updateUser } from "../services/update";
 import { IToken } from "../../auth/passport/passport";
 import moment from "moment";
 import {
   updateImagePerfilService,
   updatePasswordUserService,
 } from "../services/user.service";
+import { registerDriverImageService } from "../../drivers/services/drivers.service";
 
 export const findAllUsersController = async (
   req: Request,
@@ -188,7 +186,7 @@ export const findProfileUserController = async (
         "origin",
         "path",
         "number_of_sessions",
-        "cellphone"
+        "cellphone",
       ],
     });
 
@@ -354,6 +352,7 @@ export const updateImagePerfilServiceController = async (
     next(createError(404, err));
   }
 };
+
 
 // export const ActiveAccountUserController = async (
 //   req: Request,

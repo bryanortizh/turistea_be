@@ -1,4 +1,5 @@
 import { DataBase } from "../../../../database/index";
+import { DriversAttributes } from "../../../drivers/models/drivers.model";
 import { UserAttributes } from "../../models/user.model";
 import sequelize, { Op, WhereOptions } from "sequelize";
 import { FindAttributeOptions, Order } from "sequelize";
@@ -130,6 +131,20 @@ export const findOneUser = async (
   }
 };
 
+export const findOneDriver = async (
+  where: WhereOptions<DriversAttributes>
+): Promise<DriversAttributes | undefined> => {
+  try {
+    return (
+      await DataBase.instance.drivers.findOne({
+        where,
+      })
+    )?.get({ plain: true });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const findUserById = async ({
   id,
   attributes,
@@ -196,7 +211,7 @@ export const SearchUser = async ({
     if (regex) {
       where[Op.or] = [
         { name: { [Op.regexp]: regex } },
-        { lastname: { [Op.regexp]: regex } }
+        { lastname: { [Op.regexp]: regex } },
       ];
       // Only add id and dni if they are strings in your DB, otherwise skip them
       // If you want to search numeric fields, consider using Op.like or Op.eq with parsed numbers

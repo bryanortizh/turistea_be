@@ -14,6 +14,9 @@ export interface DriversAttributes {
   key?: string;
   size?: string;
   path_car?: string;
+  key_document?: string;
+  size_document?: string;
+  path_document?: string;
   name_district?: string;
   name_province?: string;
   name_region?: string;
@@ -85,6 +88,18 @@ export function DriversFactory(sequelize: Sequelize): DriversStatic {
         allowNull: true,
       },
       path_car: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+      },
+      key_document: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+      },
+      size_document: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
+      path_document: {
         type: DataTypes.STRING(200),
         allowNull: true,
       },

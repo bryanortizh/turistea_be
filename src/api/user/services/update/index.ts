@@ -2,7 +2,7 @@ import { DataBase } from "../../../../database";
 import moment from "moment";
 import { WhereOptions } from "sequelize/types";
 import { UserAttributes } from "../../models/user.model";
-// import { UserAttributes } from '../../models/user.model'
+import { DriversAttributes } from "../../../drivers/models/drivers.model";
 
 export const desbloqueoTiempo = async ({
   userId,
@@ -175,13 +175,28 @@ export const updateUser = async ({
   );
 };
 
+export const updateDriverOne = async ({
+  where,
+  drivers,
+}: {
+  where: WhereOptions<DriversAttributes>;
+  drivers: DriversAttributes;
+}): Promise<any> => {
+  return await DataBase.instance.drivers.update(
+    { ...drivers },
+    {
+      where,
+    }
+  );
+};
+
+
 export const updateIdDevice = async (device_id: string, userId: number) => {
   try {
     const user = await DataBase.instance.user.update(
       {
         device_id,
         updated: moment().toDate(),
-        // updated_data: new Date(),
       },
       {
         where: { id: userId },
@@ -196,19 +211,16 @@ export const updateIdDevice = async (device_id: string, userId: number) => {
 
 export const updatePasswordUser = async ({
   where,
-  // updated_by,
   salt,
   password,
 }: {
   where: WhereOptions<UserAttributes>;
-  // updated_by?: number
   salt: string;
   password: string;
 }) => {
   try {
     return await DataBase.instance.user.update(
       {
-        // updated_by,
         updated: moment.utc().toDate(),
         salt,
         password,
@@ -221,54 +233,3 @@ export const updatePasswordUser = async ({
     throw err;
   }
 };
-
-/* export const updateUser = async ({
-  id,
-  state,
-  key,
-  path,
-  size,
-  code_departamento,
-  code_provincia,
-  ubigeo,
-  name_departamento,
-  name_provincia,
-  name_distrito,
-}: {
-  id: number;
-  state?: boolean;
-  key?: string;
-  path?: string;
-  size?: string;
-  code_departamento?: number;
-  code_provincia?: number;
-  ubigeo?: number;
-  name_departamento?: string;
-  name_provincia?: string;
-  name_distrito?: string;
-}) => {
-  try {
-    return await DataBase.instance.noticia.update(
-      {
-        updated: moment.utc().toDate(),
-        state,
-        key,
-        path,
-        size,
-        code_departamento,
-        code_provincia,
-        ubigeo,
-        name_departamento,
-        name_provincia,
-        name_distrito,
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    );
-  } catch (err) {
-    throw err;
-  }
-}; */

@@ -85,7 +85,6 @@ export default class Server {
     });
     this._router.use(
       (err: any, req: Request, res: Response, next: NextFunction) => {
-        console.log(err.stack);
         res.status(err.status || 500).json({
           status: err.status,
           message: err.message,

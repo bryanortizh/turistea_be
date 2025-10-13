@@ -89,7 +89,6 @@ export const signInController = async (
     const jwt = await signInService({ email, password });
     res.status(200).json(jwt);
   } catch (err: any) {
-    console.log(err);
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }

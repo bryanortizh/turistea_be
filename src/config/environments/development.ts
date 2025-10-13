@@ -46,6 +46,7 @@ export const development: Development = {
 
   DIR: path.join(__dirname, '../../'),
   DIR_ASSETS: path.join(__dirname, '../../', 'assets'),
+  
   SENDGRID_KEY: process.env.SENDGRID_KEY,
 
   PROY_BEURL: process.env.PROY_BEURL,

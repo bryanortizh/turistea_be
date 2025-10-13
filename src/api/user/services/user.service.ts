@@ -2,6 +2,7 @@ import {
   actualizarNumIntentos,
   bloqueoUsuario,
   bloqueoUsuarioTemporal,
+  updateDriverOne,
   updatePasswordUser,
   updateUser,
 } from "./update";
@@ -13,7 +14,7 @@ import {
 import { createUser } from "./create";
 import { template_create_user } from "../../../templates/templates";
 import CryptoJS from "crypto-js";
-import { findOneUser, findUserById } from "./find";
+import { findOneDriver, findOneUser, findUserById } from "./find";
 import path from "path";
 import config from "../../../config/environments";
 import { saveImageInServer } from "../../../shared/save.file";
@@ -179,3 +180,4 @@ export const updateImagePerfilService = async ({
     throw err;
   }
 };
+
