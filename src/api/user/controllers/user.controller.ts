@@ -188,6 +188,7 @@ export const findProfileUserController = async (
         "origin",
         "path",
         "number_of_sessions",
+        "cellphone"
       ],
     });
 
