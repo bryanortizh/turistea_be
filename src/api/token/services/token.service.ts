@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import config from "../../../config/environments";
 import createError from "http-errors";
 import {
-  // findUserByEmail,
   findUserByEmailWithoutState,
 } from "../../user/services/find";
 import {
@@ -13,7 +12,6 @@ import { UserAttributes } from "../../user/models/user.model";
 import {
   desbloqueoTiempo,
   desbloqueoUsuario,
-  updateUser,
   updateUserById,
 } from "../../user/services/update/index";
 import CryptoJS from "crypto-js";
@@ -32,10 +30,6 @@ import {
   desbloqueoTiempoAdmin,
 } from "../../admin/services/update/admin";
 
-// export interface JwtPayload {
-//   usuario: string
-//   contrasena: string
-// }
 export const signInService = async ({
   email,
   password,
@@ -44,12 +38,6 @@ export const signInService = async ({
   password: string;
 }): Promise<any> => {
   try {
-    // const decoded = jwt.verify(valorJWT, config.SECRET_HIDDEN_KEY!) as JwtPayload
-
-    // const user2: UserAttributes = await findUserByEmail({
-    //   email,
-    // })
-
     const user: UserAttributes = await findUserByEmailWithoutState({
       email,
     });
@@ -59,9 +47,6 @@ export const signInService = async ({
         401,
         "El correo electrónico que ingresaste no está conectado a una cuenta"
       );
-    // if (!user) throw createError(401, 'CORREO NO LOCALIZADO')
-
-    // if (!user) throw createError(401, 'No tiene permiso, porfavor ingrese nuevamente')
 
     const _validateStatusUser = validateStatusUser({
       estado: user.status,
@@ -77,10 +62,6 @@ export const signInService = async ({
         hashedPass: user.password,
       });
       if (_validatePassPriv) {
-        /*
-          VALIDAR SI EL CORREO A SIDO CONFIRMADO  O ES UN CORREO VALIDO
-        */
-        // const validEmail = await findUserByEmail({ email })
         if (user.state == false)
           throw createError(
             401,
@@ -143,8 +124,6 @@ export const signInService = async ({
 
         throw createError(
           401,
-          // `Intentelo nuevamente en ${minRestantes} : ${segRestantes} minutos`
-          // `Intentelo nuevamente en ${Math.floor(minRestantes)} minuto${Math.floor(minRestantes) != 1 ? 's':''} y ${minRestantes} ${segRestantesv2} segundo${Math.floor(Number(segRestantesv2)) != 1 ? 's':''}`
           `Intentelo nuevamente en ${
             Math.floor(minRestantes) == 0
               ? ""
@@ -181,7 +160,7 @@ const validatePassPriv = ({
   });
   return testHash.toString() == hashedPass ? true : false;
 };
-//* Signin Admin
+
 export const signInAdminService = async ({
   email,
   password,
@@ -190,8 +169,6 @@ export const signInAdminService = async ({
   password: string;
 }): Promise<any> => {
   try {
-    // const decoded = jwt.verify(valorJWT, config.SECRET_HIDDEN_KEY!) as JwtPayload
-
     const admin: UserAttributes | null = await findOneAdmin({
       where: {
         email,
@@ -265,8 +242,6 @@ export const signInAdminService = async ({
 
         throw createError(
           401,
-          // `Intentelo nuevamente en ${minRestantes} : ${segRestantes} minutos`
-          // `Intentelo nuevamente en ${Math.floor(minRestantes)} minuto${Math.floor(minRestantes) != 1 ? 's':''} y ${segRestantes} segundo${Math.floor(Number(segRestantes)) != 1 ? 's':''}`
           `Intentelo nuevamente en ${
             Math.floor(minRestantes) == 0
               ? ""

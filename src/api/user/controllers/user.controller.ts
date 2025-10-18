@@ -6,6 +6,7 @@ import {
   findAllUsersRecordType,
   findAllUsersRangeAge,
   SearchUser,
+  findOneDriver,
 } from "../services/find/index";
 import sequelize, { Op } from "sequelize";
 import { updateIdDevice, updateUser } from "../services/update";
@@ -190,13 +191,23 @@ export const findProfileUserController = async (
       ],
     });
 
-    res.status(200).json(profileUser);
+    const isDriver = await findOneDriver({
+      email: profileUser.email,
+    });
+
+    const profileWithRole = {
+      ...(profileUser && typeof (profileUser as any).toJSON === "function"
+        ? (profileUser as any).toJSON()
+        : profileUser),
+      role: isDriver ? "driver" : "user",
+    };
+
+    res.status(200).json(profileWithRole);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
 };
-
 export const udpateDaySessionUserController = async (
   req: Request,
   res: Response,
@@ -353,7 +364,6 @@ export const updateImagePerfilServiceController = async (
   }
 };
 
-
 // export const ActiveAccountUserController = async (
 //   req: Request,
 //   res: Response,
@@ -384,10 +394,10 @@ export const UnsubscribeTheUserAndClean = async (
         // email:'nodisponible@gmail.com',
         state: false,
         password: "UNSUBSCRIBE",
-        dni: 99999999,
+        dni: "9999999",
         salt: "UNSUBSCRIBE",
         filename: "UNSUBSCRIBE",
-        cellphone: 0,
+        cellphone: "0",
         code_verification: "0",
         device_id: "UNSUBSCRIBE",
         lastname: "UNSUBSCRIBE",

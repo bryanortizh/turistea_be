@@ -69,7 +69,6 @@ export const signUpController = async (
       );
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
-
     next(createError(404, err));
   }
 };
@@ -90,7 +89,7 @@ export const signInController = async (
     res.status(200).json(jwt);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
-    next(createError(404, err));
+  next(createError(404, err));
   }
 };
 
@@ -174,7 +173,7 @@ export const signInAdminController = async (
     next(createError(404, err));
   }
 };
-//*@DESC Signin of social networks
+
 export const signInSocialNetworkController = async (
   req: Request,
   res: Response,

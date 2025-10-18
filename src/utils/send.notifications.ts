@@ -8,13 +8,9 @@ export async function SendNotificationForUsers(notification:any) {
     try {
 
         const response = await client.createNotification(notification);
-        console.log(response)
-        console.log(response.body.id);
     } catch (e:any) {
         if (e instanceof OneSignal.HTTPError) {
             // When status code of HTTP response is not 2xx, HTTPError is thrown.
-            console.log(e.statusCode);
-            console.log(e.body);
         }
     }
 

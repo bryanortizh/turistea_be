@@ -20,6 +20,7 @@ export interface DriversAttributes {
   name_district?: string;
   name_province?: string;
   name_region?: string;
+  sexo?: string;
   created?: Date;
   updated?: Date;
   created_by?: number;
@@ -115,10 +116,13 @@ export function DriversFactory(sequelize: Sequelize): DriversStatic {
         type: DataTypes.STRING(200),
         allowNull: false,
       },
+      sexo: {
+        type: DataTypes.STRING(100),
+      },
       state: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: false,
       },
       created: {
         type: DataTypes.DATE,

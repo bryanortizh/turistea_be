@@ -19,9 +19,9 @@ export const createUser = async ({
   name?: string;
   lastname?: string;
   email?: string;
-  cellphone?: number;
+  cellphone?: string;
   sexo?: string;
-  dni?: number;
+  dni?: string;
   password?: string;
   date_of_birth?: string;
   code_verification?: string;

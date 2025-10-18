@@ -114,18 +114,35 @@ export const createAdminIntranetAndSendMailService = async ({
       admin,
       adminId,
     });
-     await sendMailAxios({
-      title: 'Hola ' + _admin.name + ', tu nueva contraseña es:  ' + password,
+    await sendMailAxios({
+      title: "Hola " + _admin.name + ", tu nueva contraseña es:  " + password,
       to: _admin.email!,
       template: template_create_admin({
-        names: _admin.name + ' ' + _admin.lastname,
-        redirect_buttom:config.PROY_FEURL,
+        names: _admin.name + " " + _admin.lastname,
+        redirect_buttom: config.PROY_FEURL,
         banner:
-          'https://images.pexels.com/photos/1321943/pexels-photo-1321943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+          "https://images.pexels.com/photos/1321943/pexels-photo-1321943.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
       }),
-    }) 
+    });
     return { admin: _admin };
-  } catch (err) {
+  } catch (err: any) {
+    console.error("❌ Error en createAdminIntranetAndSendMailService:");
+    console.error("Error tipo:", err.constructor.name);
+    console.error("Error mensaje:", err.message);
+    console.error("Error stack:", err.stack);
+
+    // Si el error viene de sendMailAxios
+    if (err.response) {
+      console.error("📧 Error de email - Status:", err.response.status);
+      console.error("📧 Error de email - Data:", err.response.data);
+      console.error("📧 Error de email - Headers:", err.response.headers);
+    }
+
+    // Si el error viene de createAdminIntranet
+    if (err.sql) {
+      console.error("🗄️ Error de base de datos:", err.sql);
+    }
+
     throw err;
   }
 };

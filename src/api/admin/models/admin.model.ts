@@ -7,7 +7,7 @@ export interface AdminAttributes {
   name?: string
   lastname?: string
   email?: string
-  cellphone?: number
+  cellphone?: string
   status?: string
   numIntentos?: number
   fechaFinBloqueo?: Date

@@ -9,13 +9,13 @@ export interface UserAttributes {
   date_of_birth?: string;
   lastname?: string;
   email?: string;
-  cellphone?: number;
+  cellphone?: string;
   status?: string;
   numIntentos?: number;
   fechaFinBloqueo?: Date;
   created?: Date;
   updated?: Date;
-  dni?: number;
+  dni?: string;
   hora_bloqueo?: Date;
   cantidad_min_bloqueado?: number;
   sexo?: string;
@@ -96,7 +96,7 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
         allowNull: false,
       },
       cellphone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(15),
         allowNull: true,
       },
       status: {

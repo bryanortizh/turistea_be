@@ -4,29 +4,6 @@ import createError from 'http-errors'
 import { findAllUsersReport } from '../../user/services/find/index'
 import moment from 'moment';
 import sequelize, { Op } from 'sequelize';
-// export const report1 = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         let headerArray = [
-//             { dataBound: "nro_documento", name: "Nro factura", width: 20 },
-//         ];
-//         let result = {};
-
-//         let report = new ExcelExporter(headerArray, result);
-//         var f = await report.BuildTest();
-//         console.log('efe ', f)
-//         report.BuildTest().then( ({ statusCode , result}) => {
-//             res.writeHead(200, {
-//                 "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-//             })
-//             res.end(result, "binary")
-//         });
-
-        
-
-//     }catch(err: any){
-//         next(createError(404, err))
-//     }
-// }
 
 export const report1 = async (req: Request, res: Response, next: NextFunction) => {
     try {

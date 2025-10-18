@@ -22,10 +22,10 @@ export const createUserNetwork = async ({
   name?: string;
   lastname?: string;
   email?: string;
-  cellphone?: number;
+  cellphone?: string;
   sexo?: string;
   password?: string;
-  dni?: number;
+  dni?: string;
   date_of_birth?: string;
   code_verification?: string;
   state?: boolean;

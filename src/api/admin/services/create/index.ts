@@ -14,7 +14,7 @@ export const createAdmin = async ({
   name?: string
   lastname?: string
   email?: string
-  cellphone?: number
+  cellphone?: string
   sexo?: string
   password?: string
 }): Promise<AdminAttributes> => {

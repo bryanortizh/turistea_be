@@ -114,7 +114,7 @@ export const updateUserById = async ({
 }: {
   id?: number;
   number_of_sessions?: number;
-  cellphone?: number;
+  cellphone?: string;
   name?: string;
   lastname?: string;
   nightmode?: boolean;

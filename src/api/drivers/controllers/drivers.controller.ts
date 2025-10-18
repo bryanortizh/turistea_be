@@ -6,6 +6,14 @@ import { createDriver } from "../services/create/driver";
 import { IToken } from "../../auth/passport/passport";
 import { updateDriver } from "../services/update/driver";
 import { registerDriverImageService } from "../services/drivers.service";
+import { findOneDriver, findOneUser } from "../../user/services/find";
+import {
+  createUserAndSendCodeVerificationToMail,
+  createUserDriver,
+} from "../../user/services/user.service";
+import { generate } from "generate-password";
+import rn from "random-number";
+import CryptoJS from "crypto-js";
 
 export const findAllDriverController = async (
   req: Request,
@@ -39,7 +47,7 @@ export const createDriverController = async (
       ...req.body,
       created_by: user.userId,
       updated_by: user.userId,
-      state: true,
+      state: false,
     });
     let imagen = {};
 
@@ -96,6 +104,52 @@ export const inactiveDriverController = async (
 ) => {
   try {
     const user = req.user as IToken;
+    const userRegister = await findOneUser({ email: req.body.email });
+    const driverData = await findOneDriver({ id: Number(req.params.id) });
+    if (!userRegister && req.body.state === true) {
+      const password = generate({
+        length: 10,
+        symbols: false,
+        numbers: true,
+        lowercase: true,
+        uppercase: false,
+      });
+      const salt = CryptoJS.lib.WordArray.random(30);
+      const hashpwd = CryptoJS.PBKDF2(password, salt.toString(), {
+        iterations: 10000,
+        keySize: 10,
+      });
+
+      enum opt {
+        max = 9998,
+        min = 1001,
+      }
+
+      const gen = rn.generator({
+        min: opt.min,
+        max: opt.max,
+        integer: true,
+      });
+      const code = gen().toString();
+
+      await createUserDriver(
+        {
+          name: driverData?.name!,
+          lastname: driverData?.lastname!,
+          email: driverData?.email!,
+          cellphone: driverData?.cellphone!,
+          sexo: driverData?.sexo!,
+          dni: driverData?.number_document!,
+          password: password.toString(),
+          salt: salt.toString(),
+          code_verification: code,
+          date_of_birth: "1900-01-01",
+          state: false,
+        },
+        password.toString()
+      );
+    }
+
     const driver = await updateDriver({
       updated_by: user.userId,
       id: Number(req.params.id),

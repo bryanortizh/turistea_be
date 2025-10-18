@@ -108,7 +108,31 @@ export const createUserAndSendCodeVerificationToMail = async (
         banner:
           "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
       }),
-      title: `[TURISTEA] Código de verificación`,
+      title: `[TURISTEA] Código de verificación + contraseña:` + user.password!,
+
+      to: _user.email!,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createUserDriver = async (
+  user: UserAttributes,
+  password: string
+) => {
+  try {
+    const _user: UserAttributes = await createUser(user);
+    return await sendMailAxios({
+      template: template_create_user({
+        names: _user.name + " " + _user.lastname,
+        code: user.code_verification,
+        banner:
+          "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      }),
+      title:
+        `[TURISTEA] Bienvenido Conductor esta es tu contraseña generada:` +
+        password,
 
       to: _user.email!,
     });
@@ -180,4 +204,3 @@ export const updateImagePerfilService = async ({
     throw err;
   }
 };
-

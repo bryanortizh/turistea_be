@@ -121,7 +121,7 @@ export const updateAdmin = async ({
   updated_by?: number;
   name?: string;
   lastname?: string;
-  cellphone?: number;
+  cellphone?: string;
   key?: string;
   path?: string;
   size?: string;

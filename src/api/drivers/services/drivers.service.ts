@@ -5,39 +5,6 @@ import config from "../../../config/environments";
 import path from "path";
 import { updateDriverOne } from "../../user/services/update";
 
-/* export const registerDriverImageService = async ({
-  image_document,
-  image_car,
-  driverId,
-}: {
-  image_document: Buffer;
-  image_car: Buffer;
-  driverId: number;
-}) => {
-  try {
-    const _key = (await findOneDriver({ id: driverId, state: true }))?.key;
-    const [result, { key, size }] = await Promise.all([
-      removeFile({ path: path.join(config.DIR_ASSETS!, _key || "") }),
-      saveImageInServer({ buffer: image_car }),
-    ]);
-    const _path_car = config.PROY_BEURL + "/api/render-image/" + key;
-    await updateDriverOne({
-      drivers: {
-        key,
-        size,
-        path_car: _path_car,
-      },
-      where: {
-        id: driverId,
-      },
-    });
-    return { path: _path_car, msg: result };
-  } catch (err) {
-    throw err;
-  }
-}; */
-
-
 export const registerDriverImageService = async ({
   image_document,
   image_car,
