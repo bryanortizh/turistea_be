@@ -33,7 +33,7 @@ export const router: Router = Router();
 router.post("/signup", signupValidator, signUpController);
 router.post("/signin", signinValidator, signInController);
 router.post("/signin-google", googleSignInController);
-router.post("/signup-social-network", signInSocialNetworkController);
+router.post("/signup-socl-netwoiark", signInSocialNetworkController);
 router.post("/validate-user", validarEmailUser);
 router.post(
   "/singup-social-network-user",

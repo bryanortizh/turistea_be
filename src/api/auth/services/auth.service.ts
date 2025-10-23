@@ -1,15 +1,27 @@
-import { TokenPayload } from 'google-auth-library'
-import { UserAttributes } from '../../user/models/user.model'
-import { findUserByEmail } from '../../user/services/find'
-import { googleVerifyToken } from '../helpers/auth.helpers'
+import { TokenPayload } from "google-auth-library";
+import { UserAttributes } from "../../user/models/user.model";
+import { findUserByEmail } from "../../user/services/find";
+import { googleVerifyToken } from "../helpers/auth.helpers";
 
 export const googleSignInService = async (googleToken: string) => {
   try {
-    const payload = (await googleVerifyToken(googleToken)) as TokenPayload
-    const user: UserAttributes = await findUserByEmail({ email: payload.email! })
+    const payload = (await googleVerifyToken(googleToken)) as TokenPayload;
 
-    return payload
+    const user: UserAttributes = await findUserByEmail({
+      email: payload.email!,
+    });
+    
+    if (!user) {
+      const error = new Error("NO REGISTERED USER");
+      (error as any).status = 401;
+      throw error;
+    }
+
+    return {
+      googleData: payload,
+      user: user,
+    };
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};

@@ -89,7 +89,7 @@ export const signInController = async (
     res.status(200).json(jwt);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
-  next(createError(404, err));
+    next(createError(404, err));
   }
 };
 
@@ -138,8 +138,8 @@ export const googleSignInController = async (
   next: NextFunction
 ) => {
   try {
-    const restuls = await googleSignInService(req.body.token);
-    res.status(200).json(restuls);
+    const results = await googleSignInService(req.body.token);
+    res.status(200).json(results);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
