@@ -25,6 +25,7 @@ import {
   validateUniqueDriverFields,
   validateUpdateDriver,
 } from "../../drivers/middlewares/drivers.validator";
+import { createPackageController, findAllPackagesController, inactivePackageController, updatePackageController } from "../../package/controllers/package.controller";
 export const router: Router = Router();
 
 router.get("/profile", adminProfileController);
@@ -41,6 +42,7 @@ router.put(
   updatePasswordAdminIntranetValidator,
   updatePasswordAdminIntranetController
 );
+/* CONDUCTORES */
 router.get("/drivers", findAllDriverController);
 router.post(
   "/drivers",
@@ -55,3 +57,9 @@ router.put(
   updateDriverController
 );
 router.put("/drivers-inactive/:id", inactiveDriverController);
+
+/* PAQUETES */
+router.get("/packages", findAllPackagesController);
+router.post("/packages", createPackageController);
+router.put("/packages/:id", updatePackageController);
+router.put("/packages-inactive/:id", inactivePackageController);

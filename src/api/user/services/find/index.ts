@@ -1,5 +1,6 @@
 import { DataBase } from "../../../../database/index";
 import { DriversAttributes } from "../../../drivers/models/drivers.model";
+import { PackagesAttributes } from "../../../package/models/package.model";
 import { UserAttributes } from "../../models/user.model";
 import sequelize, { Op, WhereOptions } from "sequelize";
 import { FindAttributeOptions, Order } from "sequelize";
@@ -137,6 +138,20 @@ export const findOneDriver = async (
   try {
     return (
       await DataBase.instance.drivers.findOne({
+        where,
+      })
+    )?.get({ plain: true });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const findOnePackage = async (
+  where: WhereOptions<PackagesAttributes>
+): Promise<PackagesAttributes | undefined> => {
+  try {
+    return (
+      await DataBase.instance.packages.findOne({
         where,
       })
     )?.get({ plain: true });

@@ -1,26 +1,27 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
-import { findAllDrivers } from "../services/find/driver";
-import { createDriver } from "../services/create/driver";
 import { IToken } from "../../auth/passport/passport";
-import { updateDriver } from "../services/update/driver";
 import { registerDriverImageService } from "../services/drivers.service";
 import { findOneDriver, findOneUser } from "../../user/services/find";
-import {
-  createUserDriver,
-} from "../../user/services/user.service";
+import { createUserDriver } from "../../user/services/user.service";
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
+import { findAllPackages } from "../services/find/driver";
+import { createPackage } from "../services/create/driver";
+import {
+  registerPackageImageService,
+  updatePackage,
+} from "../services/update/driver";
 
-export const findAllDriverController = async (
+export const findAllPackagesController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const list = await findAllDrivers({
+    const list = await findAllPackages({
       page: Number(req.query.page),
       where: {
         state: Number(req.query.state),
@@ -34,7 +35,7 @@ export const findAllDriverController = async (
   }
 };
 
-export const createDriverController = async (
+export const createPackageController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -42,7 +43,7 @@ export const createDriverController = async (
   try {
     const user = req.user as IToken;
 
-    const driver = await createDriver({
+    const pkg = await createPackage({
       ...req.body,
       created_by: user.userId,
       updated_by: user.userId,
@@ -61,14 +62,13 @@ export const createDriverController = async (
         ""
       );
 
-      imagen = await registerDriverImageService({
-        image_document: Buffer.from(base64Document, "base64"),
-        image_car: Buffer.from(base64Data, "base64"),
-        driverId: driver.id!,
+      imagen = await registerPackageImageService({
+        image: Buffer.from(base64Document, "base64"),
+        packageId: pkg.id!,
       });
     }
     res.status(200).json({
-      ...driver,
+      ...pkg,
       ...imagen,
     });
   } catch (err: any) {
@@ -77,14 +77,14 @@ export const createDriverController = async (
   }
 };
 
-export const updateDriverController = async (
+export const updatePackageController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const user = req.user as IToken;
-    const driver = await updateDriver({
+    const driver = await updatePackage({
       ...req.body,
       updated_by: user.userId,
       id: Number(req.params.id),
@@ -96,65 +96,20 @@ export const updateDriverController = async (
   }
 };
 
-export const inactiveDriverController = async (
+export const inactivePackageController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const user = req.user as IToken;
-    const userRegister = await findOneUser({ email: req.body.email });
-    const driverData = await findOneDriver({ id: Number(req.params.id) });
-    if (!userRegister && req.body.state === true) {
-      const password = generate({
-        length: 10,
-        symbols: false,
-        numbers: true,
-        lowercase: true,
-        uppercase: false,
-      });
-      const salt = CryptoJS.lib.WordArray.random(30);
-      const hashpwd = CryptoJS.PBKDF2(password, salt.toString(), {
-        iterations: 10000,
-        keySize: 10,
-      });
 
-      enum opt {
-        max = 9998,
-        min = 1001,
-      }
-
-      const gen = rn.generator({
-        min: opt.min,
-        max: opt.max,
-        integer: true,
-      });
-      const code = gen().toString();
-
-      await createUserDriver(
-        {
-          name: driverData?.name!,
-          lastname: driverData?.lastname!,
-          email: driverData?.email!,
-          cellphone: driverData?.cellphone!,
-          sexo: driverData?.sexo!,
-          dni: driverData?.number_document!,
-          password: password.toString(),
-          salt: salt.toString(),
-          code_verification: code,
-          date_of_birth: "1900-01-01",
-          state: false,
-        },
-        password.toString()
-      );
-    }
-
-    const driver = await updateDriver({
+    const pkg = await updatePackage({
       updated_by: user.userId,
       id: Number(req.params.id),
       state: req.body.state,
     });
-    res.status(200).json(driver);
+    res.status(200).json(pkg);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));

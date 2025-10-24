@@ -3,6 +3,7 @@ import moment from "moment";
 import { WhereOptions } from "sequelize/types";
 import { UserAttributes } from "../../models/user.model";
 import { DriversAttributes } from "../../../drivers/models/drivers.model";
+import { PackagesAttributes } from "../../../package/models/package.model";
 
 export const desbloqueoTiempo = async ({
   userId,
@@ -184,6 +185,21 @@ export const updateDriverOne = async ({
 }): Promise<any> => {
   return await DataBase.instance.drivers.update(
     { ...drivers },
+    {
+      where,
+    }
+  );
+};
+
+export const updatePackageOne = async ({
+  where,
+  pkg,
+}: {
+  where: WhereOptions<PackagesAttributes>;
+  pkg: PackagesAttributes;
+}): Promise<any> => {
+  return await DataBase.instance.packages.update(
+    { ...pkg },
     {
       where,
     }

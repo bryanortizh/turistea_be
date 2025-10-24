@@ -14,8 +14,15 @@ import {
   TermsAndConditionsFactory,
 } from "../api/terms_and_conditions/models/termsconditions.model";
 import { ActionFactory, ActionStatic } from "../api/action/models/action.model";
-import { DriversFactory, DriversStatic } from "../api/drivers/models/drivers.model";
-import { PackagesFactory, PackagesStatic } from "../api/package/models/package.model";
+import {
+  DriversFactory,
+  DriversStatic,
+} from "../api/drivers/models/drivers.model";
+import {
+  PackagesFactory,
+  PackagesStatic,
+} from "../api/package/models/package.model";
+import { driverHasManyPackages } from "./associations/driver";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -74,7 +81,7 @@ export class DataBase {
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
         //this.drivers.sync({ alter: true, logging: console.log });
-        //this.packages.sync({ alter: true, logging: console.log });
+      //this.packages.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));
@@ -83,6 +90,10 @@ export class DataBase {
     adminHasManyAdminRoles({
       admin: this.admin,
       adminRoles: this.adminRoles,
+    });
+    driverHasManyPackages({
+      driver: this.drivers,
+      package: this.packages,
     });
   }
 }
