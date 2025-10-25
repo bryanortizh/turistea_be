@@ -26,6 +26,8 @@ import {
   validateUpdateDriver,
 } from "../../drivers/middlewares/drivers.validator";
 import { createPackageController, findAllPackagesController, inactivePackageController, updatePackageController } from "../../package/controllers/package.controller";
+import { createGuideController, inactiveGuideController, updateGuideController } from "../../guide/controller/guide.controller";
+import { findAllGuide } from "../../guide/services/find/guide";
 export const router: Router = Router();
 
 router.get("/profile", adminProfileController);
@@ -63,3 +65,9 @@ router.get("/packages", findAllPackagesController);
 router.post("/packages", createPackageController);
 router.put("/packages/:id", updatePackageController);
 router.put("/packages-inactive/:id", inactivePackageController);
+
+/* GUIAS */
+router.get("/guides", findAllDriverController);
+router.post("/guides", createGuideController);
+router.put("/guides/:id", updateGuideController);
+router.put("/guides-inactive/:id", inactiveGuideController);

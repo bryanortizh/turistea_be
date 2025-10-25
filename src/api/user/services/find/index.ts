@@ -132,33 +132,9 @@ export const findOneUser = async (
   }
 };
 
-export const findOneDriver = async (
-  where: WhereOptions<DriversAttributes>
-): Promise<DriversAttributes | undefined> => {
-  try {
-    return (
-      await DataBase.instance.drivers.findOne({
-        where,
-      })
-    )?.get({ plain: true });
-  } catch (err) {
-    throw err;
-  }
-};
 
-export const findOnePackage = async (
-  where: WhereOptions<PackagesAttributes>
-): Promise<PackagesAttributes | undefined> => {
-  try {
-    return (
-      await DataBase.instance.packages.findOne({
-        where,
-      })
-    )?.get({ plain: true });
-  } catch (err) {
-    throw err;
-  }
-};
+
+
 
 export const findUserById = async ({
   id,

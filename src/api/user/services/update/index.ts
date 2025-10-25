@@ -4,6 +4,7 @@ import { WhereOptions } from "sequelize/types";
 import { UserAttributes } from "../../models/user.model";
 import { DriversAttributes } from "../../../drivers/models/drivers.model";
 import { PackagesAttributes } from "../../../package/models/package.model";
+import { Guide, GuideAttributes } from "../../../guide/models/guide.model";
 
 export const desbloqueoTiempo = async ({
   userId,
@@ -206,6 +207,15 @@ export const updatePackageOne = async ({
   );
 };
 
+export const updateGuideOne = async ({
+  where,
+  guide,
+}: {
+  where: WhereOptions<GuideAttributes>;
+  guide: GuideAttributes;
+}): Promise<any> => {
+  return await DataBase.instance.guide.update({ ...guide }, { where });
+};
 
 export const updateIdDevice = async (device_id: string, userId: number) => {
   try {

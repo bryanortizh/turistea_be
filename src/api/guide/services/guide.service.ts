@@ -2,36 +2,36 @@ import { removeFile } from "../../../shared/remove.file";
 import { saveImageInServer } from "../../../shared/save.file";
 import config from "../../../config/environments";
 import path from "path";
-import { updateDriverOne } from "../../user/services/update";
-import { findOneDriver } from "./find/driver";
+import { updateDriverOne, updateGuideOne } from "../../user/services/update";
+import { findOneGuide } from "./find/guide";
 
-export const registerDriverImageService = async ({
+export const registerGuideImageService = async ({
   image_document,
-  image_car,
-  driverId,
+  image_photo,
+  guideId,
 }: {
   image_document?: Buffer;
-  image_car?: Buffer;
-  driverId: number;
+  image_photo?: Buffer;
+  guideId: number;
 }) => {
   try {
-    const driver = await findOneDriver({ id: driverId, state: true });
-    const oldKey = driver?.key;
-    const oldKeyDocument = driver?.key_document;
+    const guide = await findOneGuide({ id: guideId, state: true });
+    const oldKey = guide?.key_photo;
+    const oldKeyDocument = guide?.key_document;
 
-    let carData: { key?: string; size?: string; path_car?: string } = {};
+    let carPhoto: { key_photo?: string; size_photo?: string; path_photo?: string } = {};
     let documentData: { key_document?: string; size_document?: string; path_document?: string } = {};
 
-    if (image_car) {
-      const [, { key: carKey, size: carSize }] = await Promise.all([
+    if (image_photo) {
+      const [, { key: photoKey, size: photoSize }] = await Promise.all([
         oldKey ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKey) }) : Promise.resolve(),
-        saveImageInServer({ buffer: image_car }),
+        saveImageInServer({ buffer: image_photo }),
       ]);
       
-      carData = {
-        key: carKey,
-        size: carSize,
-        path_car: config.PROY_BEURL + "/api/render-image/" + carKey,
+      carPhoto = {
+        key_photo: photoKey,
+        size_photo: photoSize,
+        path_photo: config.PROY_BEURL + "/api/render-image/" + photoKey,
       };
     }
 
@@ -48,19 +48,19 @@ export const registerDriverImageService = async ({
       };
     }
 
-    await updateDriverOne({
-      drivers: {
-        ...carData,
+    await updateGuideOne({
+      guide: {
+        ...carPhoto,
         ...documentData,
       },
       where: {
-        id: driverId,
+        id: guideId,
       },
     });
 
     return { 
-      path_car: carData.path_car || driver?.path_car,
-      path_document: documentData.path_document || driver?.path_document,
+      path_photo: carPhoto.path_photo || guide?.path_photo,
+      path_document: documentData.path_document || guide?.path_document,
       msg: "Imágenes actualizadas correctamente"
     };
   } catch (err) {

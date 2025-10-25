@@ -1,11 +1,11 @@
 import path from "path";
 import { DataBase } from "../../../../database";
 import { removeFile } from "../../../../shared/remove.file";
-import { findOnePackage } from "../../../user/services/find";
 import { saveImageInServer } from "../../../../shared/save.file";
 import config from "../../../../config/environments";
 import { PackagesAttributes } from "../../models/package.model";
 import { updatePackageOne } from "../../../user/services/update";
+import { findOnePackage } from "../find/package";
 
 export const updatePackage = async ({
   id,

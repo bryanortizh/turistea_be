@@ -2,18 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
 import { IToken } from "../../auth/passport/passport";
-import { registerDriverImageService } from "../services/drivers.service";
-import { findOneDriver, findOneUser } from "../../user/services/find";
-import { createUserDriver } from "../../user/services/user.service";
-import { generate } from "generate-password";
-import rn from "random-number";
-import CryptoJS from "crypto-js";
-import { findAllPackages } from "../services/find/driver";
-import { createPackage } from "../services/create/driver";
+import { findAllPackages } from "../services/find/package";
+import { createPackage } from "../services/create/package";
 import {
   registerPackageImageService,
   updatePackage,
-} from "../services/update/driver";
+} from "../services/update/package";
 
 export const findAllPackagesController = async (
   req: Request,

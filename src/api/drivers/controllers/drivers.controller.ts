@@ -1,15 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
-import { findAllDrivers } from "../services/find/driver";
+import { findAllDrivers, findOneDriver } from "../services/find/driver";
 import { createDriver } from "../services/create/driver";
 import { IToken } from "../../auth/passport/passport";
 import { updateDriver } from "../services/update/driver";
 import { registerDriverImageService } from "../services/drivers.service";
-import { findOneDriver, findOneUser } from "../../user/services/find";
-import {
-  createUserDriver,
-} from "../../user/services/user.service";
+import { findOneUser } from "../../user/services/find";
+import { createUserDriver } from "../../user/services/user.service";
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";

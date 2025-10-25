@@ -1,20 +1,20 @@
 import { FindAttributeOptions, WhereOptions } from "sequelize";
-import { DriversAttributes } from "../../models/drivers.model";
 import { DataBase } from "../../../../database";
+import { GuideAttributes } from "../../models/guide.model";
 
-export const findAllDrivers = async ({
+export const findAllGuide = async ({
   where,
   attributes,
   page,
 }: {
-  where?: WhereOptions<DriversAttributes>;
+  where?: WhereOptions<GuideAttributes>;
   attributes?: FindAttributeOptions;
   page: number;
 }) => {
   try {
     const limit: number = 12;
     const offset: number = 0 + (page - 1) * limit;
-    const { count, rows } = await DataBase.instance.drivers.findAndCountAll({
+    const { count, rows } = await DataBase.instance.guide.findAndCountAll({
       where,
       attributes,
       limit,
@@ -27,12 +27,12 @@ export const findAllDrivers = async ({
   }
 };
 
-export const findOneDriver = async (
-  where: WhereOptions<DriversAttributes>
-): Promise<DriversAttributes | undefined> => {
+export const findOneGuide = async (
+  where: WhereOptions<GuideAttributes>
+): Promise<GuideAttributes | undefined> => {
   try {
     return (
-      await DataBase.instance.drivers.findOne({
+      await DataBase.instance.guide.findOne({
         where,
       })
     )?.get({ plain: true });

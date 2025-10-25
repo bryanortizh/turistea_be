@@ -1,27 +1,27 @@
 import path from "path";
 import { DataBase } from "../../../../database";
 import { removeFile } from "../../../../shared/remove.file";
-import { DriversAttributes } from "../../models/drivers.model";
 import { saveImageInServer } from "../../../../shared/save.file";
 import config from "../../../../config/environments";
 import { updateDriverOne } from "../../../user/services/update";
-import { findOneDriver } from "../find/driver";
+import { GuideAttributes } from "../../models/guide.model";
+import { findOneGuide } from "../find/guide";
 
-export const updateDriver = async ({
+export const updateGuide = async ({
   id,
-  ...driver
-}: Partial<DriversAttributes>): Promise<DriversAttributes | null> => {
+  ...guide
+}: Partial<GuideAttributes>): Promise<GuideAttributes | null> => {
   try {
-    const driverExist = await DataBase.instance.drivers.findByPk(id);
-    if (!driverExist) throw new Error("Conductor no encontrado");
-    await DataBase.instance.drivers.update(driver, {
+    const guideExist = await DataBase.instance.guide.findByPk(id);
+    if (!guideExist) throw new Error("Guía no encontrada");
+    await DataBase.instance.guide.update(guide, {
       where: {
         id,
       },
     });
     return {
-      ...driverExist.toJSON(),
-      ...driver,
+      ...guideExist.toJSON(),
+      ...guide,
     };
   } catch (error) {
     console.error(error);
@@ -29,15 +29,15 @@ export const updateDriver = async ({
   }
 };
 
-export const registerDriverImageService = async ({
+export const registerGuideImageService = async ({
   image,
-  driverId,
+  guideId,
 }: {
   image: Buffer;
-  driverId: number;
+  guideId: number;
 }) => {
   try {
-    const _key = (await findOneDriver({ id: driverId, state: true }))?.key;
+    const _key = (await findOneGuide({ id: guideId, state: true }))?.key_document;
     const [result, { key, size }] = await Promise.all([
       removeFile({ path: path.join(config.DIR_ASSETS!, _key || "") }),
       saveImageInServer({ buffer: image }),
@@ -50,7 +50,7 @@ export const registerDriverImageService = async ({
         path_car: _path_car,
       },
       where: {
-        id: driverId,
+        id: guideId,
       },
     });
     return { path: _path_car, msg: result };

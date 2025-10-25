@@ -6,7 +6,6 @@ import {
   findAllUsersRecordType,
   findAllUsersRangeAge,
   SearchUser,
-  findOneDriver,
 } from "../services/find/index";
 import sequelize, { Op } from "sequelize";
 import { updateIdDevice, updateUser } from "../services/update";
@@ -16,7 +15,8 @@ import {
   updateImagePerfilService,
   updatePasswordUserService,
 } from "../services/user.service";
-import { registerDriverImageService } from "../../drivers/services/drivers.service";
+import { findOneDriver } from "../../drivers/services/find/driver";
+import { findOneGuide } from "../../guide/services/find/guide";
 
 export const findAllUsersController = async (
   req: Request,
@@ -195,13 +195,24 @@ export const findProfileUserController = async (
       email: profileUser.email,
     });
 
+    const isGuide = await findOneGuide({
+      email: profileUser.email,
+    });
+
+    let role = "user";
+    if (isDriver) {
+      role = "driver";
+    } else if (isGuide) {
+      role = "guide";
+    }
+
     const profileWithRole = {
       ...(profileUser && typeof (profileUser as any).toJSON === "function"
         ? (profileUser as any).toJSON()
         : profileUser),
-      role: isDriver ? "driver" : "user",
+      role: role,
     };
-
+    
     res.status(200).json(profileWithRole);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

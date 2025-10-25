@@ -26,3 +26,17 @@ export const findAllPackages = async ({
     throw err
   }
 }
+
+export const findOnePackage = async (
+  where: WhereOptions<PackagesAttributes>
+): Promise<PackagesAttributes | undefined> => {
+  try {
+    return (
+      await DataBase.instance.packages.findOne({
+        where,
+      })
+    )?.get({ plain: true });
+  } catch (err) {
+    throw err;
+  }
+};
