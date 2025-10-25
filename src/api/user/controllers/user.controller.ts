@@ -212,7 +212,7 @@ export const findProfileUserController = async (
         : profileUser),
       role: role,
     };
-    
+  
     res.status(200).json(profileWithRole);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

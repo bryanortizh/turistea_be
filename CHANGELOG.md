@@ -1,4 +1,8 @@
 ### [TURISTEA-BE]
+
+### [0.0.5] - 18-10-2025
+-feat: role profile and create user guide with validate
+
 ### [0.0.4] - 18-10-2025
 -feat: role profile and create user driver with validate
 
