@@ -24,6 +24,7 @@ import {
 } from "../api/package/models/package.model";
 import { driverHasManyPackages } from "./associations/driver";
 import { GuideFactory, GuideStatic } from "../api/guide/models/guide.model";
+import { guideHasManyPackages } from "./associations/guide";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -84,8 +85,8 @@ export class DataBase {
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
         //this.drivers.sync({ alter: true, logging: console.log });
-        //this.packages.sync({ alter: true, logging: console.log });}
-      //  this.guide.sync({ alter: true, logging: console.log });
+        // this.packages.sync({ alter: true, logging: console.log });
+        //  this.guide.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));
@@ -99,5 +100,9 @@ export class DataBase {
       driver: this.drivers,
       package: this.packages,
     });
+    /*   guideHasManyPackages({
+      guide: this.guide,
+      package: this.packages,
+    }); */
   }
 }

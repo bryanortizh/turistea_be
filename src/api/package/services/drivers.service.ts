@@ -1,9 +1,9 @@
 import { removeFile } from "../../../shared/remove.file";
 import { saveImageInServer } from "../../../shared/save.file";
-import { findOneDriver } from "../../user/services/find";
 import config from "../../../config/environments";
 import path from "path";
 import { updateDriverOne } from "../../user/services/update";
+import { findOneDriver } from "../../drivers/services/find/driver";
 
 export const registerDriverImageService = async ({
   image_document,
