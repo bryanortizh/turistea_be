@@ -1,0 +1,15 @@
+node_modules
+.env
+.env.*
+dist
+src/assets/*
+*.log
+.DS_Store
+.git
+.gitignore
+README.md
+CHANGELOG.md
+DockerFile
+nodemon.json
+types
+assets

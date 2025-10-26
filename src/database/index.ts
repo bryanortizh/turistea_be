@@ -51,11 +51,44 @@ export class DataBase {
         port: Number(this._config.PROY_BD_PORT),
         logging: false,
         dialect: "mysql",
-        pool: {
-          max: 5,
-          min: 0,
-          idle: 10000,
+        dialectOptions: {
+          // Para conexiones SSL si es necesario
+          ssl: {
+            require: true,
+            rejectUnauthorized: false
+          },
+          // Configuraciones adicionales para serverless
+          connectTimeout: 60000,
+          acquireTimeout: 60000,
+          timeout: 60000,
         },
+        pool: {
+          max: 2, // Reducido para serverless
+          min: 0,
+          idle: 1000, // Reducido para cerrar conexiones más rápido
+          acquire: 3000, // Timeout para obtener conexión
+          evict: 1000, // Tiempo antes de remover conexiones inactivas
+        },
+        retry: {
+          match: [
+            /ETIMEDOUT/,
+            /EHOSTUNREACH/,
+            /ECONNRESET/,
+            /ECONNREFUSED/,
+            /ETIMEDOUT/,
+            /ESOCKETTIMEDOUT/,
+            /EHOSTUNREACH/,
+            /EPIPE/,
+            /EAI_AGAIN/,
+            /SequelizeConnectionError/,
+            /SequelizeConnectionRefusedError/,
+            /SequelizeHostNotFoundError/,
+            /SequelizeHostNotReachableError/,
+            /SequelizeInvalidConnectionError/,
+            /SequelizeConnectionTimedOutError/,
+          ],
+          max: 3
+        }
       }
     );
     this.user = UserFactory(this.sequelize);
@@ -77,19 +110,13 @@ export class DataBase {
   private connectDb(): void {
     this.sequelize
       .authenticate()
-      // .sync({ alter: true, logging: console.log })
       .then(() => {
-        /* this.token.sync({ alter: true, logging: console.log });
-         this.termsAndConditions.sync({ alter: true, logging: console.log }); 
-        this.adminRoles.sync({ alter: true, logging: console.log });
-        this.admin.sync({ alter: true, logging: console.log });  */
-        //this.user.sync({ alter: true, logging: console.log });
-        //this.drivers.sync({ alter: true, logging: console.log });
-        // this.packages.sync({ alter: true, logging: console.log });
-        //  this.guide.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error("Database connection failed:", err);
+        // En serverless, log el error pero no terminar el proceso
+      });
   }
   private associations(): void {
     adminHasManyAdminRoles({

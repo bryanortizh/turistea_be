@@ -34,6 +34,10 @@ export default class Server {
   static init(port: number): Server {
     return new Server(port);
   }
+
+  get app(): Application {
+    return this._app;
+  }
   middlewares(): void {
     this._app.use(cors({ credentials: true }));
     this._app.use(morgan("dev"));
