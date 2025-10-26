@@ -25,8 +25,18 @@ import {
   validateUniqueDriverFields,
   validateUpdateDriver,
 } from "../../drivers/middlewares/drivers.validator";
-import { createPackageController, findAllPackagesController, inactivePackageController, updatePackageController } from "../../package/controllers/package.controller";
-import { createGuideController, inactiveGuideController, updateGuideController } from "../../guide/controller/guide.controller";
+import {
+  createPackageController,
+  findAllPackagesController,
+  inactivePackageController,
+  updatePackageController,
+} from "../../package/controllers/package.controller";
+import {
+  createGuideController,
+  findAllGuideController,
+  inactiveGuideController,
+  updateGuideController,
+} from "../../guide/controller/guide.controller";
 import { findAllGuide } from "../../guide/services/find/guide";
 export const router: Router = Router();
 
@@ -52,12 +62,7 @@ router.post(
   validateUniqueDriverFields,
   createDriverController
 );
-router.put(
-  "/drivers/:id",
-  validateUpdateDriver,
-  validateUniqueDriverFields,
-  updateDriverController
-);
+router.put("/drivers/:id", updateDriverController);
 router.put("/drivers-inactive/:id", inactiveDriverController);
 
 /* PAQUETES */
@@ -67,7 +72,7 @@ router.put("/packages/:id", updatePackageController);
 router.put("/packages-inactive/:id", inactivePackageController);
 
 /* GUIAS */
-router.get("/guides", findAllDriverController);
+router.get("/guides", findAllGuideController);
 router.post("/guides", createGuideController);
 router.put("/guides/:id", updateGuideController);
 router.put("/guides-inactive/:id", inactiveGuideController);

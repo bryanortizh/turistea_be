@@ -24,7 +24,6 @@ export const updateGuide = async ({
       ...guide,
     };
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

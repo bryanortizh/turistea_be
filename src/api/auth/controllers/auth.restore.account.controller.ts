@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import createError from 'http-errors'
 import sequelize, { Op } from 'sequelize'
-import { template_create_user } from '../../../templates/templates'
 import { sendMailAxios } from '../../../utils/generate.mail'
 import { findUserByEmailWithoutState } from '../../user/services/find'
 import { updateUser } from '../../user/services/update'
 import rn from 'random-number'
 import CryptoJS from 'crypto-js'
+import { template_create_client } from '../../../templates/templates'
 
 export const restoreAccountUserController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -94,11 +94,9 @@ export const sendCodeVerificationForRestoreAccountUserController = async (
     })
 
     await sendMailAxios({
-      template: template_create_user({
+      template: template_create_client({
         names: name + ' ' + lastname,
         code,
-        banner:
-          'https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
       }),
       title: `[TURISTEA] Código de verificación`,
       to: email!,

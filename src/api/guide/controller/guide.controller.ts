@@ -15,7 +15,7 @@ import { createGuide } from "../services/create/guide";
 import { registerGuideImageService } from "../services/guide.service";
 import { updateGuide } from "../services/update/guide";
 
-export const findAllDriverController = async (
+export const findAllGuideController = async (
   req: Request,
   res: Response,
   next: NextFunction

@@ -24,7 +24,6 @@ export const updatePackage = async ({
       ...driver,
     };
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

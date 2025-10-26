@@ -2,19 +2,19 @@ import {
   actualizarNumIntentos,
   bloqueoUsuario,
   bloqueoUsuarioTemporal,
-  updateDriverOne,
   updatePasswordUser,
   updateUser,
 } from "./update";
 import { UserAttributes } from "../models/user.model";
-import {
-  //  sendEmail,
-  sendMailAxios,
-} from "../../../utils/generate.mail";
+import { sendMailAxios } from "../../../utils/generate.mail";
 import { createUser } from "./create";
-import { template_create_user } from "../../../templates/templates";
+import {
+  template_create_client,
+  template_create_driver,
+  template_create_guide,
+} from "../../../templates/templates";
 import CryptoJS from "crypto-js";
-import {  findOneUser } from "./find";
+import { findOneUser } from "./find";
 import path from "path";
 import config from "../../../config/environments";
 import { saveImageInServer } from "../../../shared/save.file";
@@ -102,14 +102,11 @@ export const createUserAndSendCodeVerificationToMail = async (
   try {
     const _user: UserAttributes = await createUser(user);
     return await sendMailAxios({
-      template: template_create_user({
+      template: template_create_client({
         names: _user.name + " " + _user.lastname,
-        code: user.code_verification,
-        banner:
-          "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        code: _user.code_verification!,
       }),
-      title: `[TURISTEA] Código de verificación + contraseña:` + user.password!,
-
+      title: `[TURISTEA] Bienvenido Usuario Turistea`,
       to: _user.email!,
     });
   } catch (err) {
@@ -124,16 +121,12 @@ export const createUserDriver = async (
   try {
     const _user: UserAttributes = await createUser(user);
     return await sendMailAxios({
-      template: template_create_user({
+      template: template_create_driver({
         names: _user.name + " " + _user.lastname,
-        code: user.code_verification,
-        banner:
-          "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        email: _user.email!,
+        password: password,
       }),
-      title:
-        `[TURISTEA] Bienvenido Conductor esta es tu contraseña generada:` +
-        password,
-
+      title: `[TURISTEA] Bienvenido Conductor`,
       to: _user.email!,
     });
   } catch (err) {
@@ -148,23 +141,18 @@ export const createUserGuide = async (
   try {
     const _user: UserAttributes = await createUser(user);
     return await sendMailAxios({
-      template: template_create_user({
+      template: template_create_guide({
         names: _user.name + " " + _user.lastname,
-        code: user.code_verification,
-        banner:
-          "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        email: _user.email!,
+        password: password,
       }),
-      title:
-        `[TURISTEA] Bienvenido Guía esta es tu contraseña generada:` +
-        password,
-
+      title: `[TURISTEA] Bienvenido Guía Turístico`,
       to: _user.email!,
     });
   } catch (err) {
     throw err;
   }
 };
-
 
 export const updatePasswordUserService = async (
   new_password: string,

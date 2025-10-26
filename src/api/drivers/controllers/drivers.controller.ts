@@ -87,7 +87,30 @@ export const updateDriverController = async (
       updated_by: user.userId,
       id: Number(req.params.id),
     });
-    res.status(200).json(driver);
+
+    let imagen = {};
+
+    if (req.body.image_car && req.body.image_document) {
+      const base64Data = req.body.image_car.replace(
+        /^data:image\/[a-z]+;base64,/,
+        ""
+      );
+
+      const base64Document = req.body.image_document.replace(
+        /^data:image\/[a-z]+;base64,/,
+        ""
+      );
+
+      imagen = await registerDriverImageService({
+        image_document: Buffer.from(base64Document, "base64"),
+        image_car: Buffer.from(base64Data, "base64"),
+        driverId: Number(req.params.id),
+      });
+    }
+    res.status(200).json({
+      ...driver,
+      ...imagen,
+    });
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
@@ -141,7 +164,7 @@ export const inactiveDriverController = async (
           salt: salt.toString(),
           code_verification: code,
           date_of_birth: "1900-01-01",
-          state: false,
+          state: true,
         },
         password.toString()
       );

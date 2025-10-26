@@ -31,6 +31,8 @@ export const createAdmin = async ({
       salt: salt.toString(),
       cellphone,
       created: moment.utc().toDate(),
+      created_by: 1,
+      
     })
   } catch (err) {
     throw err
