@@ -82,11 +82,6 @@ export const updateDriverController = async (
 ) => {
   try {
     const user = req.user as IToken;
-    const driver = await updateDriver({
-      ...req.body,
-      updated_by: user.userId,
-      id: Number(req.params.id),
-    });
 
     let imagen = {};
 
@@ -107,6 +102,13 @@ export const updateDriverController = async (
         driverId: Number(req.params.id),
       });
     }
+
+    const driver = await updateDriver({
+      ...req.body,
+      updated_by: user.userId,
+      id: Number(req.params.id),
+    });
+    
     res.status(200).json({
       ...driver,
       ...imagen,

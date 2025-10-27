@@ -13,7 +13,7 @@ export const updatePackage = async ({
 }: Partial<PackagesAttributes>): Promise<PackagesAttributes | null> => {
   try {
     const packageExist = await DataBase.instance.packages.findByPk(id);
-    if (!packageExist) throw new Error("Conductor no encontrado");
+    if (!packageExist) throw new Error("Paquete no encontrado");
     await DataBase.instance.drivers.update(driver, {
       where: {
         id,
@@ -29,17 +29,17 @@ export const updatePackage = async ({
 };
 
 export const registerPackageImageService = async ({
-  image,
+  image_bg,
   packageId,
 }: {
-  image: Buffer;
+  image_bg: Buffer;
   packageId: number;
 }) => {
   try {
     const _key = (await findOnePackage({ id: packageId, state: true }))?.key;
     const [result, { key, size }] = await Promise.all([
       removeFile({ path: path.join(config.DIR_ASSETS!, _key || "") }),
-      saveImageInServer({ buffer: image }),
+      saveImageInServer({ buffer: image_bg }),
     ]);
     const _path_bg = config.PROY_BEURL + "/api/render-image/" + key;
     await updatePackageOne({

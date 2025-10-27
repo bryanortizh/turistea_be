@@ -41,26 +41,22 @@ export const createPackageController = async (
       ...req.body,
       created_by: user.userId,
       updated_by: user.userId,
-      state: false,
+      state: true,
     });
     let imagen = {};
 
-    if (req.body.image_car && req.body.image_document) {
-      const base64Data = req.body.image_car.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      const base64Document = req.body.image_document.replace(
+    if (req.body.image_bg) {
+      const base64Data = req.body.image_bg.replace(
         /^data:image\/[a-z]+;base64,/,
         ""
       );
 
       imagen = await registerPackageImageService({
-        image: Buffer.from(base64Document, "base64"),
+        image_bg: Buffer.from(base64Data, "base64"),
         packageId: pkg.id!,
       });
     }
+
     res.status(200).json({
       ...pkg,
       ...imagen,
@@ -78,12 +74,31 @@ export const updatePackageController = async (
 ) => {
   try {
     const user = req.user as IToken;
-    const driver = await updatePackage({
+
+    let imagen = {};
+
+    if (req.body.image_bg) {
+      const base64Data = req.body.image_bg.replace(
+        /^data:image\/[a-z]+;base64,/,
+        ""
+      );
+
+      imagen = await registerPackageImageService({
+        image_bg: Buffer.from(base64Data, "base64"),
+        packageId: req.params.id as unknown as number,
+      });
+    }
+
+    const pkg = await updatePackage({
       ...req.body,
       updated_by: user.userId,
       id: Number(req.params.id),
     });
-    res.status(200).json(driver);
+
+    res.status(200).json({
+      ...pkg,
+      ...imagen,
+    });
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));

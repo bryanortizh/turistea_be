@@ -134,12 +134,6 @@ export const updateGuideController = async (
   try {
     const user = req.user as IToken;
 
-    const guide = await updateGuide({
-      ...req.body,
-      updated_by: user.userId,
-      id: Number(req.params.id),
-    });
-
     let imagen = {};
 
     // Manejar imágenes si vienen en el body
@@ -160,6 +154,12 @@ export const updateGuideController = async (
         guideId: Number(req.params.id),
       });
     }
+
+    const guide = await updateGuide({
+      ...req.body,
+      updated_by: user.userId,
+      id: Number(req.params.id),
+    });
 
     res.status(200).json({
       ...guide,
