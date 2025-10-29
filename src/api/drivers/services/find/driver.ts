@@ -1,4 +1,4 @@
-import { FindAttributeOptions, WhereOptions } from "sequelize";
+import { FindAttributeOptions, WhereOptions, Op } from "sequelize";
 import { DriversAttributes } from "../../models/drivers.model";
 import { DataBase } from "../../../../database";
 
@@ -22,6 +22,26 @@ export const findAllDrivers = async ({
       order: [["id", "ASC"]],
     });
     return { page, count, rows };
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const findDriverByName = async (
+  searchTerm: string
+): Promise<DriversAttributes | undefined> => {
+  try {
+    return (
+      await DataBase.instance.drivers.findOne({
+        where: {
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${searchTerm}%` } },
+            { lastname: { [Op.iLike]: `%${searchTerm}%` } },
+            { number_document: { [Op.iLike]: `%${searchTerm}%` } },
+          ],
+        },
+      })
+    )?.get({ plain: true });
   } catch (err) {
     throw err;
   }

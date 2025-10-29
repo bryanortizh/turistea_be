@@ -25,6 +25,7 @@ import {
 import { driverHasManyPackages } from "./associations/driver";
 import { GuideFactory, GuideStatic } from "../api/guide/models/guide.model";
 import { guideHasManyPackages } from "./associations/guide";
+import { RouterTrackingFactory, RouterTrackingStatic } from "../api/router_tracking/models/router_tracking.model";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -40,6 +41,7 @@ export class DataBase {
   public packages: PackagesStatic;
   public action: ActionStatic;
   public guide: GuideStatic;
+  public routerTracking: RouterTrackingStatic;
 
   constructor() {
     this.sequelize = new Sequelize(
@@ -68,6 +70,7 @@ export class DataBase {
     this.drivers = DriversFactory(this.sequelize);
     this.packages = PackagesFactory(this.sequelize);
     this.guide = GuideFactory(this.sequelize);
+    this.routerTracking = RouterTrackingFactory(this.sequelize);
     this.associations();
     this.connectDb();
   }
@@ -87,6 +90,7 @@ export class DataBase {
         //this.drivers.sync({ alter: true, logging: console.log });
         // this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
+         // this.routerTracking.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));

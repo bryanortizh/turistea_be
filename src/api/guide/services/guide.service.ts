@@ -2,8 +2,8 @@ import { removeFile } from "../../../shared/remove.file";
 import { saveImageInServer } from "../../../shared/save.file";
 import config from "../../../config/environments";
 import path from "path";
-import { updateDriverOne, updateGuideOne } from "../../user/services/update";
 import { findOneGuide } from "./find/guide";
+import { updateGuideOne } from "./update/guide";
 
 export const registerGuideImageService = async ({
   image_document,

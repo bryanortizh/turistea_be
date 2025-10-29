@@ -17,6 +17,7 @@ import { findAllAdminController } from "../controllers/admin.controller";
 import {
   createDriverController,
   findAllDriverController,
+  findDriverByNameController,
   inactiveDriverController,
   updateDriverController,
 } from "../../drivers/controllers/drivers.controller";
@@ -38,6 +39,12 @@ import {
   updateGuideController,
 } from "../../guide/controller/guide.controller";
 import { findAllGuide } from "../../guide/services/find/guide";
+import {
+  createRouterTrackingController,
+  findAllRouterTrackingController,
+  inactiveRouterTrackingController,
+  updateRouterTrackingController,
+} from "../../router_tracking/controllers/router_tracking.controller";
 export const router: Router = Router();
 
 router.get("/profile", adminProfileController);
@@ -64,6 +71,7 @@ router.post(
 );
 router.put("/drivers/:id", updateDriverController);
 router.put("/drivers-inactive/:id", inactiveDriverController);
+router.get("/driver/:name", findDriverByNameController);
 
 /* PAQUETES */
 router.get("/packages", findAllPackagesController);
@@ -76,3 +84,9 @@ router.get("/guides", findAllGuideController);
 router.post("/guides", createGuideController);
 router.put("/guides/:id", updateGuideController);
 router.put("/guides-inactive/:id", inactiveGuideController);
+
+/* ROUTER TRACKING */
+router.get("/router-tracking", findAllRouterTrackingController);
+router.post("/router-tracking", createRouterTrackingController);
+router.put("/router-tracking/:id", updateRouterTrackingController);
+router.put("/router-tracking-inactive/:id", inactiveRouterTrackingController);

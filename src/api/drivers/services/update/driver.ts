@@ -1,11 +1,7 @@
 import path from "path";
 import { DataBase } from "../../../../database";
-import { removeFile } from "../../../../shared/remove.file";
 import { DriversAttributes } from "../../models/drivers.model";
-import { saveImageInServer } from "../../../../shared/save.file";
-import config from "../../../../config/environments";
-import { updateDriverOne } from "../../../user/services/update";
-import { findOneDriver } from "../find/driver";
+import { WhereOptions } from "sequelize";
 
 export const updateDriver = async ({
   id,
@@ -28,32 +24,17 @@ export const updateDriver = async ({
   }
 };
 
-export const registerDriverImageService = async ({
-  image,
-  driverId,
+export const updateDriverOne = async ({
+  where,
+  drivers,
 }: {
-  image: Buffer;
-  driverId: number;
-}) => {
-  try {
-    const _key = (await findOneDriver({ id: driverId, state: true }))?.key;
-    const [result, { key, size }] = await Promise.all([
-      removeFile({ path: path.join(config.DIR_ASSETS!, _key || "") }),
-      saveImageInServer({ buffer: image }),
-    ]);
-    const _path_car = config.PROY_BEURL + "/api/render-image/" + key;
-    await updateDriverOne({
-      drivers: {
-        key,
-        size,
-        path_car: _path_car,
-      },
-      where: {
-        id: driverId,
-      },
-    });
-    return { path: _path_car, msg: result };
-  } catch (err) {
-    throw err;
-  }
+  where: WhereOptions<DriversAttributes>;
+  drivers: DriversAttributes;
+}): Promise<any> => {
+  return await DataBase.instance.drivers.update(
+    { ...drivers },
+    {
+      where,
+    }
+  );
 };

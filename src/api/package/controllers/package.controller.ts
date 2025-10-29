@@ -5,9 +5,9 @@ import { IToken } from "../../auth/passport/passport";
 import { findAllPackages } from "../services/find/package";
 import { createPackage } from "../services/create/package";
 import {
-  registerPackageImageService,
   updatePackage,
 } from "../services/update/package";
+import { registerPackageImageService } from "../services/package.service";
 
 export const findAllPackagesController = async (
   req: Request,

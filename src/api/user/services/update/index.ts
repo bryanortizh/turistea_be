@@ -177,45 +177,7 @@ export const updateUser = async ({
   );
 };
 
-export const updateDriverOne = async ({
-  where,
-  drivers,
-}: {
-  where: WhereOptions<DriversAttributes>;
-  drivers: DriversAttributes;
-}): Promise<any> => {
-  return await DataBase.instance.drivers.update(
-    { ...drivers },
-    {
-      where,
-    }
-  );
-};
 
-export const updatePackageOne = async ({
-  where,
-  pkg,
-}: {
-  where: WhereOptions<PackagesAttributes>;
-  pkg: PackagesAttributes;
-}): Promise<any> => {
-  return await DataBase.instance.packages.update(
-    { ...pkg },
-    {
-      where,
-    }
-  );
-};
-
-export const updateGuideOne = async ({
-  where,
-  guide,
-}: {
-  where: WhereOptions<GuideAttributes>;
-  guide: GuideAttributes;
-}): Promise<any> => {
-  return await DataBase.instance.guide.update({ ...guide }, { where });
-};
 
 export const updateIdDevice = async (device_id: string, userId: number) => {
   try {

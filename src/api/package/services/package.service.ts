@@ -2,16 +2,14 @@ import { removeFile } from "../../../shared/remove.file";
 import { saveImageInServer } from "../../../shared/save.file";
 import config from "../../../config/environments";
 import path from "path";
-import { updatePackageOne } from "../../user/services/update";
 import { findOnePackage } from "./find/package";
+import { updatePackageOne } from "./update/package";
 
 export const registerPackageImageService = async ({
-  image_document,
-  image_car,
+  image_bg,
   packageId,
 }: {
-  image_document?: Buffer;
-  image_car?: Buffer;
+  image_bg?: Buffer;
   packageId: number;
 }) => {
   try {
@@ -20,18 +18,18 @@ export const registerPackageImageService = async ({
 
     let carBG: { key?: string; size?: string; path_bg?: string } = {};
 
-    if (image_car) {
-      const [, { key: carKey, size: carSize }] = await Promise.all([
+    if (image_bg) {
+      const [, { key: bgKey, size: bgSize }] = await Promise.all([
         oldKey
           ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKey) })
           : Promise.resolve(),
-        saveImageInServer({ buffer: image_car }),
+        saveImageInServer({ buffer: image_bg }),
       ]);
 
       carBG = {
-        key: carKey,
-        size: carSize,
-        path_bg: config.PROY_BEURL + "/api/render-image/" + carKey,
+        key: bgKey,
+        size: bgSize,
+        path_bg: config.PROY_BEURL + "/api/render-image/" + bgKey,
       };
     }
 

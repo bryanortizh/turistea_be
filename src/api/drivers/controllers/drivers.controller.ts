@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
-import { findAllDrivers, findOneDriver } from "../services/find/driver";
+import {
+  findAllDrivers,
+  findDriverByName,
+  findOneDriver,
+} from "../services/find/driver";
 import { createDriver } from "../services/create/driver";
 import { IToken } from "../../auth/passport/passport";
 import { updateDriver } from "../services/update/driver";
@@ -25,6 +29,21 @@ export const findAllDriverController = async (
       },
     });
     res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+export const findDriverByNameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const driver = await findDriverByName(req.params.name);
+    res.status(200).json(driver);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
 
@@ -108,7 +127,7 @@ export const updateDriverController = async (
       updated_by: user.userId,
       id: Number(req.params.id),
     });
-    
+
     res.status(200).json({
       ...driver,
       ...imagen,
