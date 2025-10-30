@@ -9,7 +9,7 @@ export const updatePackage = async ({
   try {
     const packageExist = await DataBase.instance.packages.findByPk(id);
     if (!packageExist) throw new Error("Paquete no encontrado");
-    await DataBase.instance.drivers.update(driver, {
+    await DataBase.instance.packages.update(driver, {
       where: {
         id,
       },

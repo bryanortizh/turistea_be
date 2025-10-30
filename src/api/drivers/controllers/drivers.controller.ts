@@ -43,6 +43,7 @@ export const findDriverByNameController = async (
 ) => {
   try {
     const driver = await findDriverByName(req.params.name);
+    console.log(driver);
     res.status(200).json(driver);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

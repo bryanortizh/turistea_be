@@ -29,19 +29,23 @@ export const findAllDrivers = async ({
 
 export const findDriverByName = async (
   searchTerm: string
-): Promise<DriversAttributes | undefined> => {
+): Promise<DriversAttributes[]> => {
   try {
-    return (
-      await DataBase.instance.drivers.findOne({
-        where: {
-          [Op.or]: [
-            { name: { [Op.iLike]: `%${searchTerm}%` } },
-            { lastname: { [Op.iLike]: `%${searchTerm}%` } },
-            { number_document: { [Op.iLike]: `%${searchTerm}%` } },
-          ],
-        },
-      })
-    )?.get({ plain: true });
+    const drivers = await DataBase.instance.drivers.findAll({
+      where: {
+        [Op.or]: [
+          { number_document: { [Op.like]: `%${searchTerm}%` } },
+          { number_plate: { [Op.like]: `%${searchTerm}%` } },
+        ],
+      },
+    });
+    return drivers.map(driver => {
+      const driverData = driver.get({ plain: true });
+      return {
+        ...driverData,
+        textSearch: `${driverData.name || ''} ${driverData.lastname || ''} ${driverData.number_document || ''} - ${driverData.number_plate || ''}`.trim()
+      };
+    });
   } catch (err) {
     throw err;
   }
