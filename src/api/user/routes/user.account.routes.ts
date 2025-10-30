@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   findProfileUserController,
+  getPackageUserController,
+  getRouterPackageByIdController,
   udpateDaySessionUserController,
   updateGenderAndDateOfBirthController,
   updateImagePerfilServiceController,
@@ -13,6 +15,7 @@ import {
 } from "../middlewares/user.validator";
 import { updateImagePerfil } from "../validator/user.custom";
 export const router: Router = Router();
+
 router.get("/", findProfileUserController);
 router.put("/daysession", udpateDaySessionUserController);
 router.put(
@@ -27,3 +30,8 @@ router.put(
 );
 router.put("/terms/conditions", updateTermsAndConditionsController);
 router.put("/image", updateImagePerfil, updateImagePerfilServiceController);
+router.get("/packages", getPackageUserController);
+router.get("/router-packages/:id", getRouterPackageByIdController);
+
+
+
