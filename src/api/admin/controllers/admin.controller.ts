@@ -53,11 +53,22 @@ export const findAllAdminController = async (
   next: NextFunction
 ) => {
   try {
+    const searchTerm = req.params.search;
+    const whereCondition: any = {
+      state: Number(req.query.state),
+    };
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      whereCondition[sequelize.Op.or] = [
+        { name: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { lastname: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { email: { [sequelize.Op.like]: `%${searchTerm}%` } },
+      ];
+    }
+
     const list = await findAllAdmin({
       page: Number(req.query.page),
-      where: {
-        state: Number(req.query.state),
-      },
+      where: whereCondition,
       attributes: [
         "id",
         "name",

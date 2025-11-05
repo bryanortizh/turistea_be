@@ -4,7 +4,7 @@ import { ActiveAccountUserValidator, listUserIntranetValidator, listUserRecordTy
 import { ActiveAccountUserController } from '../../auth/controllers/auth.active.account.controller'
 export const router: Router = Router()
 router.get('/', listUserIntranetValidator, findAllUsersController)
-router.get('/search/:q', SeachUsersController)
+router.get('/search/:search', SeachUsersController)
 
 
 router.get('/recordType', listUserRecordType, findAllUsersRecordTypeController)

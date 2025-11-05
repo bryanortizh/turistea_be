@@ -22,12 +22,14 @@ export const findAllDriverController = async (
   next: NextFunction
 ) => {
   try {
+    console.log("req.query.page", req.query.page);
     const list = await findAllDrivers({
       page: Number(req.query.page),
       where: {
         state: Number(req.query.state),
       },
     });
+    console.log("list", list);
     res.status(200).json(list);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

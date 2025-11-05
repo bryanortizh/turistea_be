@@ -137,19 +137,14 @@ export const updateGuideController = async (
     let imagen = {};
 
     // Manejar imágenes si vienen en el body
-    if (req.body.image_photo && req.body.image_document) {
+    if (req.body.image_photo) {
       const base64Data = req.body.image_photo.replace(
         /^data:image\/[a-z]+;base64,/,
         ""
       );
 
-      const base64Document = req.body.image_document.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
 
       imagen = await registerGuideImageService({
-        image_document: Buffer.from(base64Document, "base64"),
         image_photo: Buffer.from(base64Data, "base64"),
         guideId: Number(req.params.id),
       });

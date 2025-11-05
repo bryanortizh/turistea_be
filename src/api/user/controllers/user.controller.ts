@@ -59,9 +59,9 @@ export const SeachUsersController = async (
   next: NextFunction
 ) => {
   try {
-    const { q } = req.params;
+    const { search } = req.params;
 
-    const regex = q.split(" ").join("|");
+    const regex = search.split(" ").join("|");
 
     const list = await SearchUser({
       regex,

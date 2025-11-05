@@ -17,10 +17,8 @@ export const registerGuideImageService = async ({
   try {
     const guide = await findOneGuide({ id: guideId, state: true });
     const oldKey = guide?.key_photo;
-    const oldKeyDocument = guide?.key_document;
 
     let carPhoto: { key_photo?: string; size_photo?: string; path_photo?: string } = {};
-    let documentData: { key_document?: string; size_document?: string; path_document?: string } = {};
 
     if (image_photo) {
       const [, { key: photoKey, size: photoSize }] = await Promise.all([
@@ -35,23 +33,10 @@ export const registerGuideImageService = async ({
       };
     }
 
-    if (image_document) {
-      const [, { key: docKey, size: docSize }] = await Promise.all([
-        oldKeyDocument ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKeyDocument) }) : Promise.resolve(),
-        saveImageInServer({ buffer: image_document }),
-      ]);
-      
-      documentData = {
-        key_document: docKey,
-        size_document: docSize,
-        path_document: config.PROY_BEURL + "/api/render-image/" + docKey,
-      };
-    }
 
     await updateGuideOne({
       guide: {
         ...carPhoto,
-        ...documentData,
       },
       where: {
         id: guideId,
@@ -60,7 +45,6 @@ export const registerGuideImageService = async ({
 
     return { 
       path_photo: carPhoto.path_photo || guide?.path_photo,
-      path_document: documentData.path_document || guide?.path_document,
       msg: "Imágenes actualizadas correctamente"
     };
   } catch (err) {

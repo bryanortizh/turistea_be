@@ -16,6 +16,7 @@ export const findAllRouterTrackingController = async (
     const list = await findAllRouterTrackings({
       page: Number(req.query.page),
       where: {
+        id: req.params.id,
         state: Number(req.query.state),
       },
     });

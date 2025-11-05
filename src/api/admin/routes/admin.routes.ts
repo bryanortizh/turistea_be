@@ -49,6 +49,7 @@ export const router: Router = Router();
 
 router.get("/profile", adminProfileController);
 router.get("/", listAdminIntranet, findAllAdminController);
+router.get("/search/:search", listAdminIntranet, findAllAdminController);
 router.put("/:id", updateAdminIntranetValidator, updateAdminIntranetController);
 router.post("/", createAdminIntranet, createAdminIntranetController);
 router.put(
@@ -86,7 +87,7 @@ router.put("/guides/:id", updateGuideController);
 router.put("/guides-inactive/:id", inactiveGuideController);
 
 /* ROUTER TRACKING */
-router.get("/router-tracking", findAllRouterTrackingController);
+router.get("/router-tracking/:id", findAllRouterTrackingController);
 router.post("/router-tracking", createRouterTrackingController);
 router.put("/router-tracking/:id", updateRouterTrackingController);
 router.put("/router-tracking-inactive/:id", inactiveRouterTrackingController);
