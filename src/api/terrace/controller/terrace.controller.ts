@@ -6,22 +6,23 @@ import { findOneUser } from "../../user/services/find";
 import {
   createUserDriver,
   createUserGuide,
+  createUserTerrace,
 } from "../../user/services/user.service";
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
-import { findAllGuide, findOneGuide } from "../services/find/guide";
-import { createGuide } from "../services/create/guide";
-import { registerGuideImageService } from "../services/guide.service";
-import { updateGuide } from "../services/update/guide";
+import { findAllTerrace, findOneTerrace } from "../services/find/terrace";
+import { createTerrace } from "../services/create/terrace";
+import { registerTerraceImageService } from "../services/terrace.service";
+import { updateTerrace } from "../services/update/terrace";
 
-export const findAllGuideController = async (
+export const findAllTerraceController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const list = await findAllGuide({
+    const list = await findAllTerrace({
       page: Number(req.query.page),
       where: {
         state: Number(req.query.state),
@@ -35,7 +36,7 @@ export const findAllGuideController = async (
   }
 };
 
-export const createGuideController = async (
+export const createTerraceController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -45,7 +46,7 @@ export const createGuideController = async (
 
     const userRegister = await findOneUser({ email: req.body.email });
 
-    const guide = await createGuide({
+    const terrace = await createTerrace({
       ...req.body,
       created_by: user.userId,
       updated_by: user.userId,
@@ -64,14 +65,14 @@ export const createGuideController = async (
         ""
       );
 
-      imagen = await registerGuideImageService({
+      imagen = await registerTerraceImageService({
         image_document: Buffer.from(base64Document, "base64"),
         image_photo: Buffer.from(base64Data, "base64"),
-        guideId: guide.id!,
+        terraceId: terrace.id!,
       });
     }
 
-    const guideData = await findOneGuide({ id: Number(guide.id) });
+    const terraceData = await findOneTerrace({ id: Number(terrace.id) });
     if (!userRegister) {
       const password = generate({
         length: 10,
@@ -98,14 +99,14 @@ export const createGuideController = async (
       });
       const code = gen().toString();
 
-      await createUserGuide(
+      await createUserTerrace(
         {
-          name: guideData?.name!,
-          lastname: guideData?.lastname!,
-          email: guideData?.email!,
-          cellphone: guideData?.cellphone!,
-          sexo: guideData?.sexo!,
-          dni: guideData?.number_document!,
+          name: terraceData?.name!,
+          lastname: terraceData?.lastname!,
+          email: terraceData?.email!,
+          cellphone: terraceData?.cellphone!,
+          sexo: terraceData?.sexo!,
+          dni: terraceData?.number_document!,
           password: password.toString(),
           salt: salt.toString(),
           code_verification: code,
@@ -117,7 +118,7 @@ export const createGuideController = async (
     }
 
     res.status(200).json({
-      ...guide,
+      ...terrace,
       ...imagen,
     });
   } catch (err: any) {
@@ -126,7 +127,7 @@ export const createGuideController = async (
   }
 };
 
-export const updateGuideController = async (
+export const updateTerraceController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -156,20 +157,20 @@ export const updateGuideController = async (
         imageData.image_document = Buffer.from(base64Document, "base64");
       }
 
-      imagen = await registerGuideImageService({
+      imagen = await registerTerraceImageService({
         ...imageData,
-        guideId: Number(req.params.id),
+        terraceId: Number(req.params.id),
       });
     }
 
-    const guide = await updateGuide({
+    const terrace = await updateTerrace({
       ...req.body,
       updated_by: user.userId,
       id: Number(req.params.id),
     });
 
     res.status(200).json({
-      ...guide,
+      ...terrace,
       ...imagen,
     });
   } catch (err: any) {
@@ -178,7 +179,7 @@ export const updateGuideController = async (
   }
 };
 
-export const inactiveGuideController = async (
+export const inactiveTerraceController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -186,12 +187,12 @@ export const inactiveGuideController = async (
   try {
     const user = req.user as IToken;
 
-    const guide = await updateGuide({
+    const terrace = await updateTerrace({
       updated_by: user.userId,
       id: Number(req.params.id),
       state: req.body.state,
     });
-    res.status(200).json(guide);
+    res.status(200).json(terrace);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));

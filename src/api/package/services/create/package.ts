@@ -3,8 +3,6 @@ import { DataBase } from "../../../../database";
 export const createPackage = async ({
   title,
   description,
-  name_district,
-  name_province,
   name_region,
   id_driver,
   created_by,
@@ -14,8 +12,6 @@ export const createPackage = async ({
 }: {
   title?: string;
   description?: string;
-  name_district?: string;
-  name_province?: string;
   name_region?: string;
   id_driver?: number;
   created_by?: number;
@@ -27,8 +23,6 @@ export const createPackage = async ({
     return await DataBase.instance.packages.create({
       title,
       description,
-      name_district,
-      name_province,
       name_region,
       id_driver,
       created,

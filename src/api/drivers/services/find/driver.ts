@@ -51,6 +51,21 @@ export const findDriverByName = async (
   }
 };
 
+export const allDrivers = async (): Promise<DriversAttributes[]> => {
+  try {
+    const drivers = await DataBase.instance.drivers.findAll();
+    return drivers.map(driver => {
+      const driverData = driver.get({ plain: true });
+      return {
+        ...driverData,
+        textSearch: `${driverData.name || ''} ${driverData.lastname || ''} ${driverData.number_document || ''} - ${driverData.number_plate || ''}`.trim()
+      };
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const findOneDriver = async (
   where: WhereOptions<DriversAttributes>
 ): Promise<DriversAttributes | undefined> => {

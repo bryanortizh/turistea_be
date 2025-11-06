@@ -55,12 +55,7 @@ export function PackagesFactory(sequelize: Sequelize): PackagesStatic {
         type: DataTypes.STRING(200),
         allowNull: true,
       },
-      name_district: {
-        type: DataTypes.STRING(200),
-      },
-      name_province: {
-        type: DataTypes.STRING(200),
-      },
+  
       name_region: {
         type: DataTypes.STRING(200),
       },

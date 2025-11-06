@@ -2,42 +2,32 @@ import { removeFile } from "../../../shared/remove.file";
 import { saveImageInServer } from "../../../shared/save.file";
 import config from "../../../config/environments";
 import path from "path";
-import { findOneGuide } from "./find/guide";
-import { updateGuideOne } from "./update/guide";
+import { findOneTerrace } from "./find/terrace";
+import { updateTerraceOne } from "./update/terrace";
 
-export const registerGuideImageService = async ({
+export const registerTerraceImageService = async ({
   image_document,
   image_photo,
-  guideId,
+  terraceId,
 }: {
   image_document?: Buffer;
   image_photo?: Buffer;
-  guideId: number;
+  terraceId: number;
 }) => {
   try {
-    const guide = await findOneGuide({ id: guideId, state: true });
-    const oldKey = guide?.key_photo;
-    const oldKeyDocument = guide?.key_document;
+    const terrace = await findOneTerrace({ id: terraceId, state: true });
+    const oldKey = terrace?.key_photo;
+    const oldKeyDocument = terrace?.key_document;
 
-    let carPhoto: {
-      key_photo?: string;
-      size_photo?: string;
-      path_photo?: string;
-    } = {};
-    let documentData: {
-      key_document?: string;
-      size_document?: string;
-      path_document?: string;
-    } = {};
+    let carPhoto: { key_photo?: string; size_photo?: string; path_photo?: string } = {};
+    let documentData: { key_document?: string; size_document?: string; path_document?: string } = {};
 
     if (image_photo) {
       const [, { key: photoKey, size: photoSize }] = await Promise.all([
-        oldKey
-          ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKey) })
-          : Promise.resolve(),
+        oldKey ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKey) }) : Promise.resolve(),
         saveImageInServer({ buffer: image_photo }),
       ]);
-
+      
       carPhoto = {
         key_photo: photoKey,
         size_photo: photoSize,
@@ -47,11 +37,10 @@ export const registerGuideImageService = async ({
 
     if (image_document) {
       const [, { key: docKey, size: docSize }] = await Promise.all([
-        oldKeyDocument
-          ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKeyDocument) })
-          : Promise.resolve(),
+        oldKeyDocument ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKeyDocument) }) : Promise.resolve(),
         saveImageInServer({ buffer: image_document }),
       ]);
+      
       documentData = {
         key_document: docKey,
         size_document: docSize,
@@ -59,19 +48,20 @@ export const registerGuideImageService = async ({
       };
     }
 
-    await updateGuideOne({
-      guide: {
+    await updateTerraceOne({
+      terrace: {
         ...carPhoto,
         ...documentData,
       },
       where: {
-        id: guideId,
+        id: terraceId,
       },
     });
 
-    return {
-      path_photo: carPhoto.path_photo || guide?.path_photo,
-      msg: "Imágenes actualizadas correctamente",
+    return { 
+      path_photo: carPhoto.path_photo || terrace?.path_photo,
+      path_document: documentData.path_document || terrace?.path_document,
+      msg: "Imágenes actualizadas correctamente"
     };
   } catch (err) {
     throw err;

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
 import {
+  allDrivers,
   findAllDrivers,
   findDriverByName,
   findOneDriver,
@@ -16,20 +17,48 @@ import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
 
+
 export const findAllDriverController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    console.log("req.query.page", req.query.page);
+    const searchTerm = req.params.search;
+    const whereCondition: any = {
+      state: Number(req.query.state),
+    };
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      whereCondition[sequelize.Op.or] = [
+        { name: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { lastname: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { email: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { cellphone: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { number_document: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { license_plate: { [sequelize.Op.like]: `%${searchTerm}%` } },
+      ];
+    }
+
     const list = await findAllDrivers({
       page: Number(req.query.page),
-      where: {
-        state: Number(req.query.state),
-      },
+      where: whereCondition,
     });
-    console.log("list", list);
+    res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+export const allDriversController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const list = await allDrivers();
     res.status(200).json(list);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
@@ -45,7 +74,6 @@ export const findDriverByNameController = async (
 ) => {
   try {
     const driver = await findDriverByName(req.params.name);
-    console.log(driver);
     res.status(200).json(driver);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

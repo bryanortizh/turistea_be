@@ -25,7 +25,9 @@ import {
 import { driverHasManyPackages } from "./associations/driver";
 import { GuideFactory, GuideStatic } from "../api/guide/models/guide.model";
 import { guideHasManyPackages } from "./associations/guide";
+import { terraceHasManyPackages } from "./associations/terrace";
 import { RouterTrackingFactory, RouterTrackingStatic } from "../api/router_tracking/models/router_tracking.model";
+import { TerraceFactory, TerraceStatic } from "../api/terrace/models/terrace.model";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -42,6 +44,7 @@ export class DataBase {
   public action: ActionStatic;
   public guide: GuideStatic;
   public routerTracking: RouterTrackingStatic;
+  public terrace: TerraceStatic;
 
   constructor() {
     this.sequelize = new Sequelize(
@@ -71,6 +74,7 @@ export class DataBase {
     this.packages = PackagesFactory(this.sequelize);
     this.guide = GuideFactory(this.sequelize);
     this.routerTracking = RouterTrackingFactory(this.sequelize);
+    this.terrace = TerraceFactory(this.sequelize);
     this.associations();
     this.connectDb();
   }
@@ -88,9 +92,10 @@ export class DataBase {
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
         //this.drivers.sync({ alter: true, logging: console.log });
-        // this.packages.sync({ alter: true, logging: console.log });
+        //this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
-         // this.routerTracking.sync({ alter: true, logging: console.log });
+        //this.routerTracking.sync({ alter: true, logging: console.log });
+      //  this.terrace.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));
@@ -106,6 +111,10 @@ export class DataBase {
     });
     /*   guideHasManyPackages({
       guide: this.guide,
+      package: this.packages,
+    }); */
+    /* terraceHasManyPackages({
+      terrace: this.terrace,
       package: this.packages,
     }); */
   }

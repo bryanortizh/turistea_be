@@ -12,6 +12,7 @@ import {
   template_create_client,
   template_create_driver,
   template_create_guide,
+  template_create_terrace,
 } from "../../../templates/templates";
 import CryptoJS from "crypto-js";
 import { findOneUser } from "./find";
@@ -147,6 +148,26 @@ export const createUserGuide = async (
         password: password,
       }),
       title: `[TURISTEA] Bienvenido Guía Turístico`,
+      to: _user.email!,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createUserTerrace = async (
+  user: UserAttributes,
+  password: string
+) => {
+  try {
+    const _user: UserAttributes = await createUser(user);
+    return await sendMailAxios({
+      template: template_create_terrace({
+        names: _user.name + " " + _user.lastname,
+        email: _user.email!,
+        password: password,
+      }),
+      title: `[TURISTEA] Bienvenida Terramoza`,
       to: _user.email!,
     });
   } catch (err) {

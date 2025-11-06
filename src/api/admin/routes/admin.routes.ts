@@ -15,6 +15,7 @@ import {
 } from "../middlewares/admin.validator";
 import { findAllAdminController } from "../controllers/admin.controller";
 import {
+  allDriversController,
   createDriverController,
   findAllDriverController,
   findDriverByNameController,
@@ -40,6 +41,17 @@ import {
 } from "../../guide/controller/guide.controller";
 import { findAllGuide } from "../../guide/services/find/guide";
 import {
+  createTerraceController,
+  findAllTerraceController,
+  inactiveTerraceController,
+  updateTerraceController,
+} from "../../terrace/controller/terrace.controller";
+import {
+  validateCreateTerrace,
+  validateUniqueTerraceFields,
+  validateUpdateTerrace,
+} from "../../terrace/middlewares/terrace.validator";
+import {
   createRouterTrackingController,
   findAllRouterTrackingController,
   inactiveRouterTrackingController,
@@ -62,8 +74,11 @@ router.put(
   updatePasswordAdminIntranetValidator,
   updatePasswordAdminIntranetController
 );
+
 /* CONDUCTORES */
 router.get("/drivers", findAllDriverController);
+router.get("/drivers-all", allDriversController);
+router.get("/drivers/:search", findAllDriverController);
 router.post(
   "/drivers",
   validateCreateDriver,
@@ -85,6 +100,16 @@ router.get("/guides", findAllGuideController);
 router.post("/guides", createGuideController);
 router.put("/guides/:id", updateGuideController);
 router.put("/guides-inactive/:id", inactiveGuideController);
+
+/* TERRAMOZAS */
+router.get("/terraces", findAllTerraceController);
+router.post("/terraces", 
+  validateCreateTerrace,
+  validateUniqueTerraceFields,
+  createTerraceController
+);
+router.put("/terraces/:id", validateUpdateTerrace, updateTerraceController);
+router.put("/terraces-inactive/:id", inactiveTerraceController);
 
 /* ROUTER TRACKING */
 router.get("/router-tracking/:id", findAllRouterTrackingController);

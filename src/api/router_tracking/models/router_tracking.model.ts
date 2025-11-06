@@ -4,6 +4,8 @@ export interface RouterTrackingAttributes {
   id?: number;
   title?: string;
   description?: string;
+  name_district?: string;
+  name_province?: string;
   key_bgone?: string;
   size_bgone?: string;
   path_bgone?: string;
@@ -51,6 +53,12 @@ export function RouterTrackingFactory(
       description: {
         type: DataTypes.STRING(300),
         allowNull: false,
+      },
+      name_district: {
+        type: DataTypes.STRING(200),
+      },
+      name_province: {
+        type: DataTypes.STRING(200),
       },
       key_bgone: {
         type: DataTypes.STRING(200),
