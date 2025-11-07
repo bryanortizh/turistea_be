@@ -28,6 +28,7 @@ import { guideHasManyPackages } from "./associations/guide";
 import { terraceHasManyPackages } from "./associations/terrace";
 import { RouterTrackingFactory, RouterTrackingStatic } from "../api/router_tracking/models/router_tracking.model";
 import { TerraceFactory, TerraceStatic } from "../api/terrace/models/terrace.model";
+import { routerTrackingBelongsToRouterPackage } from "./associations/router_tracking";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -92,7 +93,7 @@ export class DataBase {
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
         //this.drivers.sync({ alter: true, logging: console.log });
-        this.packages.sync({ alter: true, logging: console.log });
+        //this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
         //this.routerTracking.sync({ alter: true, logging: console.log });
       //  this.terrace.sync({ alter: true, logging: console.log });
@@ -108,6 +109,10 @@ export class DataBase {
     driverHasManyPackages({
       driver: this.drivers,
       package: this.packages,
+    });
+    routerTrackingBelongsToRouterPackage({
+      routerTracking: this.routerTracking,
+      routerPackage: this.packages,
     });
     /*   guideHasManyPackages({
       guide: this.guide,

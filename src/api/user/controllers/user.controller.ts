@@ -191,6 +191,16 @@ export const getRouterPackageByIdController = async (
     const packageId = Number(req.params.id);
     const packageData = await DataBase.instance.routerTracking.findOne({
       where: { id: packageId },
+      attributes: {
+        exclude: ["id_package", "createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: DataBase.instance.packages,
+          as: "package",
+          attributes: ["id", "title", "description", "path_bg", "path_bg_two"],
+        },
+      ],
     });
 
     if (!packageData) {
