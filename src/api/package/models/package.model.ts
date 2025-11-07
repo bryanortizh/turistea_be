@@ -7,6 +7,9 @@ export interface PackagesAttributes {
   key?: string;
   size?: string;
   path_bg?: string;
+  key_two?: string;
+  size_two?: string;
+  path_bg_two?: string;
   name_district?: string;
   name_province?: string;
   name_region?: string;
@@ -55,7 +58,18 @@ export function PackagesFactory(sequelize: Sequelize): PackagesStatic {
         type: DataTypes.STRING(200),
         allowNull: true,
       },
-  
+      key_two: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+      },
+      size_two: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
+      path_bg_two: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+      },
       name_region: {
         type: DataTypes.STRING(200),
       },

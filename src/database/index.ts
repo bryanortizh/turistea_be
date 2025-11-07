@@ -92,7 +92,7 @@ export class DataBase {
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
         //this.drivers.sync({ alter: true, logging: console.log });
-        //this.packages.sync({ alter: true, logging: console.log });
+        this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
         //this.routerTracking.sync({ alter: true, logging: console.log });
       //  this.terrace.sync({ alter: true, logging: console.log });

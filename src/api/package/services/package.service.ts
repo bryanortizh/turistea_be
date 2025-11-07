@@ -7,16 +7,20 @@ import { updatePackageOne } from "./update/package";
 
 export const registerPackageImageService = async ({
   image_bg,
+  image_bg_two,
   packageId,
 }: {
   image_bg?: Buffer;
+  image_bg_two?: Buffer;
   packageId: number;
 }) => {
   try {
     const pkg = await findOnePackage({ id: packageId, state: true });
     const oldKey = pkg?.key;
+    const oldKeyTwo = pkg?.key_two;
 
     let carBG: { key?: string; size?: string; path_bg?: string } = {};
+    let carBGTwo: { key_two?: string; size_two?: string; path_bg_two?: string } = {};
 
     if (image_bg) {
       const [, { key: bgKey, size: bgSize }] = await Promise.all([
@@ -32,10 +36,25 @@ export const registerPackageImageService = async ({
         path_bg: config.PROY_BEURL + "/api/render-image/" + bgKey,
       };
     }
+    if (image_bg_two) {
+      const [, { key: bgKeyTwo, size: bgSizeTwo }] = await Promise.all([
+        oldKeyTwo
+          ? removeFile({ path: path.join(config.DIR_ASSETS!, oldKeyTwo) })
+          : Promise.resolve(),
+        saveImageInServer({ buffer: image_bg_two }),
+      ]);
+
+      carBGTwo = {
+        key_two: bgKeyTwo,
+        size_two: bgSizeTwo,
+        path_bg_two: config.PROY_BEURL + "/api/render-image/" + bgKeyTwo,
+      };
+    }
 
     await updatePackageOne({
       pkg: {
         ...carBG,
+        ...carBGTwo,
       },
       where: {
         id: packageId,

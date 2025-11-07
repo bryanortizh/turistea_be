@@ -45,16 +45,28 @@ export const createPackageController = async (
     });
     let imagen = {};
 
-    if (req.body.image_bg) {
-      const base64Data = req.body.image_bg.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      imagen = await registerPackageImageService({
-        image_bg: Buffer.from(base64Data, "base64"),
+    if (req.body.image_bg || req.body.image_bg_two) {
+      const imageData: any = {
         packageId: pkg.id!,
-      });
+      };
+
+      if (req.body.image_bg) {
+        const base64Data = req.body.image_bg.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg = Buffer.from(base64Data, "base64");
+      }
+
+      if (req.body.image_bg_two) {
+        const base64DataTwo = req.body.image_bg_two.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg_two = Buffer.from(base64DataTwo, "base64");
+      }
+
+      imagen = await registerPackageImageService(imageData);
     }
 
     res.status(200).json({
@@ -77,16 +89,28 @@ export const updatePackageController = async (
 
     let imagen = {};
 
-    if (req.body.image_bg) {
-      const base64Data = req.body.image_bg.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      imagen = await registerPackageImageService({
-        image_bg: Buffer.from(base64Data, "base64"),
+    if (req.body.image_bg || req.body.image_bg_two) {
+      const imageData: any = {
         packageId: req.params.id as unknown as number,
-      });
+      };
+
+      if (req.body.image_bg) {
+        const base64Data = req.body.image_bg.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg = Buffer.from(base64Data, "base64");
+      }
+
+      if (req.body.image_bg_two) {
+        const base64DataTwo = req.body.image_bg_two.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg_two = Buffer.from(base64DataTwo, "base64");
+      }
+
+      imagen = await registerPackageImageService(imageData);
     }
 
     const pkg = await updatePackage({
