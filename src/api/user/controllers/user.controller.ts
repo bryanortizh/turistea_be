@@ -190,7 +190,7 @@ export const getRouterPackageByIdController = async (
   try {
     const packageId = Number(req.params.id);
     const packageData = await DataBase.instance.routerTracking.findOne({
-      where: { id: packageId },
+      where: { id_package: packageId },
       attributes: {
         exclude: ["id_package", "createdAt", "updatedAt"],
       },
@@ -198,13 +198,22 @@ export const getRouterPackageByIdController = async (
         {
           model: DataBase.instance.packages,
           as: "package",
-          attributes: ["id", "title", "description", "path_bg", "path_bg_two"],
+          attributes: [
+            "id",
+            "title",
+            "description",
+            "name_region",
+            "path_bg",
+            "path_bg_two",
+          ],
         },
       ],
     });
 
     if (!packageData) {
-      return res.status(404).json({ message: "Paquete no encontrado para la ruta" });
+      return res
+        .status(404)
+        .json({ message: "Paquete no encontrado para la ruta" });
     }
 
     res.status(200).json(packageData);
@@ -260,7 +269,7 @@ export const findProfileUserController = async (
         : profileUser),
       role: role,
     };
-  
+
     res.status(200).json(profileWithRole);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

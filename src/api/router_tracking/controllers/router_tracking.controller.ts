@@ -38,23 +38,19 @@ export const createRouterTrackingController = async (
 
     // Procesar route_json si contiene bg_image
     let processedRouteJson = req.body.route_json;
-    console.log("Original route_json:", req.body.route_json);
     
     if (req.body.route_json) {
       try {
         const routeData = JSON.parse(req.body.route_json);
-        console.log("Parsed routeData:", routeData);
         
         // Verificar si es un array de objetos
         if (Array.isArray(routeData)) {
-          console.log("Processing array of route objects");
           
           // Procesar cada objeto en el array
           for (let i = 0; i < routeData.length; i++) {
             const routeItem = routeData[i];
             
             if (routeItem.bg_image && routeItem.bg_image.startsWith('data:image/')) {
-              console.log(`Processing bg_image for route item ${i}`);
               
               // Extraer la imagen de fondo del JSON
               const base64BgImage = routeItem.bg_image.replace(
@@ -78,20 +74,13 @@ export const createRouterTrackingController = async (
                 bg_image_size: size
               };
               
-              console.log(`Processed bg_image for route item ${i}:`, {
-                url: imageUrl,
-                key: key,
-                size: size
-              });
             }
           }
           
           processedRouteJson = JSON.stringify(routeData);
-          console.log("Final processed route_json:", processedRouteJson);
         }
         // Si no es array, manejar como objeto simple (compatibilidad hacia atrás)
         else if (routeData.bg_image && routeData.bg_image.startsWith('data:image/')) {
-          console.log("Processing single route object");
           
           const base64BgImage = routeData.bg_image.replace(
             /^data:image\/[a-z]+;base64,/,
@@ -110,7 +99,6 @@ export const createRouterTrackingController = async (
           routeData.bg_image_size = size;
           
           processedRouteJson = JSON.stringify(routeData);
-          console.log("Processed single route_json:", processedRouteJson);
         }
       } catch (error) {
         console.error("Error processing route_json:", error);
@@ -174,18 +162,15 @@ export const updateRouterTrackingController = async (
     if (req.body.route_json) {
       try {
         const routeData = JSON.parse(req.body.route_json);
-        console.log("Update - Parsed routeData:", routeData);
         
         // Verificar si es un array de objetos
         if (Array.isArray(routeData)) {
-          console.log("Update - Processing array of route objects");
           
           // Procesar cada objeto en el array
           for (let i = 0; i < routeData.length; i++) {
             const routeItem = routeData[i];
             
             if (routeItem.bg_image && routeItem.bg_image.startsWith('data:image/')) {
-              console.log(`Update - Processing bg_image for route item ${i}`);
               
               // Extraer la imagen de fondo del JSON
               const base64BgImage = routeItem.bg_image.replace(
@@ -209,20 +194,14 @@ export const updateRouterTrackingController = async (
                 bg_image_size: size
               };
               
-              console.log(`Update - Processed bg_image for route item ${i}:`, {
-                url: imageUrl,
-                key: key,
-                size: size
-              });
+              
             }
           }
           
           processedRouteJson = JSON.stringify(routeData);
-          console.log("Update - Final processed route_json:", processedRouteJson);
         }
         // Si no es array, manejar como objeto simple (compatibilidad hacia atrás)
         else if (routeData.bg_image && routeData.bg_image.startsWith('data:image/')) {
-          console.log("Update - Processing single route object");
           
           const base64BgImage = routeData.bg_image.replace(
             /^data:image\/[a-z]+;base64,/,
@@ -241,7 +220,6 @@ export const updateRouterTrackingController = async (
           routeData.bg_image_size = size;
           
           processedRouteJson = JSON.stringify(routeData);
-          console.log("Update - Processed single route_json:", processedRouteJson);
         }
       } catch (error) {
         console.error("Update - Error processing route_json:", error);

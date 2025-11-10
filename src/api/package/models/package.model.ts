@@ -14,6 +14,8 @@ export interface PackagesAttributes {
   name_province?: string;
   name_region?: string;
   id_driver?: number;
+  id_terrace?: number;
+  id_guide?: number;
   state?: boolean;
   created?: Date;
   updated?: Date;
@@ -74,6 +76,14 @@ export function PackagesFactory(sequelize: Sequelize): PackagesStatic {
         type: DataTypes.STRING(200),
       },
       id_driver: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      id_terrace: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      id_guide: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

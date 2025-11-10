@@ -5,6 +5,8 @@ export const createPackage = async ({
   description,
   name_region,
   id_driver,
+  id_terrace,
+  id_guide,
   created_by,
   updated_by,
   created,
@@ -14,6 +16,8 @@ export const createPackage = async ({
   description?: string;
   name_region?: string;
   id_driver?: number;
+  id_terrace?: number;
+  id_guide?: number;
   created_by?: number;
   updated_by?: number;
   created?: Date;
@@ -25,6 +29,8 @@ export const createPackage = async ({
       description,
       name_region,
       id_driver,
+      id_terrace,
+      id_guide,
       created,
       updated,
       created_by,
