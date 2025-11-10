@@ -26,9 +26,20 @@ import { driverHasManyPackages } from "./associations/driver";
 import { GuideFactory, GuideStatic } from "../api/guide/models/guide.model";
 import { guideHasManyPackages } from "./associations/guide";
 import { terraceHasManyPackages } from "./associations/terrace";
-import { RouterTrackingFactory, RouterTrackingStatic } from "../api/router_tracking/models/router_tracking.model";
-import { TerraceFactory, TerraceStatic } from "../api/terrace/models/terrace.model";
+import {
+  RouterTrackingFactory,
+  RouterTrackingStatic,
+} from "../api/router_tracking/models/router_tracking.model";
+import {
+  TerraceFactory,
+  TerraceStatic,
+} from "../api/terrace/models/terrace.model";
 import { routerTrackingBelongsToRouterPackage } from "./associations/router_tracking";
+import {
+  FormReserve,
+  FormReserveFactory,
+  FormReserveStatic,
+} from "../api/form_reserve/model/form_reserve.model";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -46,6 +57,7 @@ export class DataBase {
   public guide: GuideStatic;
   public routerTracking: RouterTrackingStatic;
   public terrace: TerraceStatic;
+  public formReserve: FormReserveStatic;
 
   constructor() {
     this.sequelize = new Sequelize(
@@ -76,6 +88,7 @@ export class DataBase {
     this.guide = GuideFactory(this.sequelize);
     this.routerTracking = RouterTrackingFactory(this.sequelize);
     this.terrace = TerraceFactory(this.sequelize);
+    this.formReserve = FormReserveFactory(this.sequelize);
     this.associations();
     this.connectDb();
   }
@@ -96,7 +109,8 @@ export class DataBase {
         //this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
         //this.routerTracking.sync({ alter: true, logging: console.log });
-      //  this.terrace.sync({ alter: true, logging: console.log });
+        //  this.terrace.sync({ alter: true, logging: console.log });
+        //this.formReserve.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));
