@@ -40,6 +40,7 @@ import {
   FormReserveFactory,
   FormReserveStatic,
 } from "../api/form_reserve/model/form_reserve.model";
+import { formReserveBellongToIdPackage, formReserveBelongsToClient, formReserveBelongToIdRouterTrackign } from "./associations/form_reserve";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -127,6 +128,18 @@ export class DataBase {
     routerTrackingBelongsToRouterPackage({
       routerTracking: this.routerTracking,
       routerPackage: this.packages,
+    });
+    formReserveBelongToIdRouterTrackign({
+      formReserve: this.formReserve,
+      routerTracking: this.routerTracking,
+    });
+    formReserveBellongToIdPackage({
+      formReserve: this.formReserve,
+      pkg: this.packages,
+    });
+    formReserveBelongsToClient({
+      formReserve: this.formReserve,
+      user: this.user,
     });
     /*   guideHasManyPackages({
       guide: this.guide,
