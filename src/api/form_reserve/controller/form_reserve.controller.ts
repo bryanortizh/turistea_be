@@ -20,6 +20,7 @@ export const createFormReserveController = async (
 
     const formReserve = await createFormReserve({
       ...req.body,
+      id_user: user.userId,
       users_json: processedUsersJson,
       created_by: user.userId,
       updated_by: user.userId,
@@ -132,6 +133,52 @@ export const findOneFormReserveController = async (
     });
   } catch (err: any) {
     console.error("Error finding form reserve:", err);
+    if (err instanceof sequelize.ValidationError) {
+      next(createError(400, err.message));
+    } else {
+      next(createError(500, "Error interno del servidor"));
+    }
+  }
+};
+
+export const findUserFormReservesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user as IToken;
+    const page = Number(req.query.page) || 1;
+    const status = req.query.status as string;
+    const state = req.query.state;
+
+    // Construir filtros con id_user del token
+    const whereConditions: any = {
+      id_user: user.userId,
+    };
+    
+    if (status !== undefined) {
+      whereConditions.status_form = status;
+    }
+    
+    if (state !== undefined) {
+      whereConditions.state = Boolean(Number(state));
+    }
+
+    const result = await findAllFormReserve({
+      page,
+      where: whereConditions,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Formularios de reserva del usuario obtenidos exitosamente",
+      data: {
+        ...result,
+      },
+    });
+  } catch (err: any) {
+    console.error("Error finding user form reserves:", err);
     if (err instanceof sequelize.ValidationError) {
       next(createError(400, err.message));
     } else {

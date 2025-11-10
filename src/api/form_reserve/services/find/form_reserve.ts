@@ -20,6 +20,19 @@ export const findAllFormReserve = async ({
       limit,
       offset,
       order: [["id", "DESC"]],
+      include: [
+        { model: DataBase.instance.user, as: 'user' },
+        { 
+          model: DataBase.instance.packages, 
+          as: 'package',
+          include: [
+            { model: DataBase.instance.drivers, as: 'driver' },
+            { model: DataBase.instance.guide, as: 'guide' },
+            { model: DataBase.instance.terrace, as: 'terrace' },
+          ]
+        },
+        { model: DataBase.instance.routerTracking, as: 'router_tracking' },
+      ],
     });
     return { page, count, rows };
   } catch (err) {

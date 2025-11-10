@@ -40,7 +40,11 @@ import {
   FormReserveFactory,
   FormReserveStatic,
 } from "../api/form_reserve/model/form_reserve.model";
-import { formReserveBellongToIdPackage, formReserveBelongsToClient, formReserveBelongToIdRouterTrackign } from "./associations/form_reserve";
+import {
+  formReserveBellongToIdPackage,
+  formReserveBelongsToClient,
+  formReserveBelongToIdRouterTrackign,
+} from "./associations/form_reserve";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -106,8 +110,8 @@ export class DataBase {
         this.adminRoles.sync({ alter: true, logging: console.log });
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
-        //this.drivers.sync({ alter: true, logging: console.log });
-        //this.packages.sync({ alter: true, logging: console.log });
+        //       this.drivers.sync({ alter: true, logging: console.log });
+        //     this.packages.sync({ alter: true, logging: console.log });
         //  this.guide.sync({ alter: true, logging: console.log });
         //this.routerTracking.sync({ alter: true, logging: console.log });
         //  this.terrace.sync({ alter: true, logging: console.log });
@@ -123,6 +127,14 @@ export class DataBase {
     });
     driverHasManyPackages({
       driver: this.drivers,
+      package: this.packages,
+    });
+    guideHasManyPackages({
+      guide: this.guide,
+      package: this.packages,
+    });
+    terraceHasManyPackages({
+      terrace: this.terrace,
       package: this.packages,
     });
     routerTrackingBelongsToRouterPackage({
@@ -141,13 +153,5 @@ export class DataBase {
       formReserve: this.formReserve,
       user: this.user,
     });
-    /*   guideHasManyPackages({
-      guide: this.guide,
-      package: this.packages,
-    }); */
-    /* terraceHasManyPackages({
-      terrace: this.terrace,
-      package: this.packages,
-    }); */
   }
 }
