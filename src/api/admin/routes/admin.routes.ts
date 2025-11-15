@@ -34,15 +34,19 @@ import {
   updatePackageController,
 } from "../../package/controllers/package.controller";
 import {
+  allGuideController,
   createGuideController,
   findAllGuideController,
+  findGuideByNameController,
   inactiveGuideController,
   updateGuideController,
 } from "../../guide/controller/guide.controller";
 import { findAllGuide } from "../../guide/services/find/guide";
 import {
+  allTerracesController,
   createTerraceController,
   findAllTerraceController,
+  findTerraceByNameController,
   inactiveTerraceController,
   updateTerraceController,
 } from "../../terrace/controller/terrace.controller";
@@ -99,12 +103,15 @@ router.put("/packages-inactive/:id", inactivePackageController);
 
 /* GUIAS */
 router.get("/guides", findAllGuideController);
+router.get("/guides-all", allGuideController)
 router.post("/guides", createGuideController);
 router.put("/guides/:id", updateGuideController);
 router.put("/guides-inactive/:id", inactiveGuideController);
+router.get("/guides-search/:name", findGuideByNameController);
 
 /* TERRAMOZAS */
 router.get("/terraces", findAllTerraceController);
+router.get("/terraces-all", allTerracesController);
 router.post("/terraces", 
   validateCreateTerrace,
   validateUniqueTerraceFields,
@@ -112,6 +119,7 @@ router.post("/terraces",
 );
 router.put("/terraces/:id", validateUpdateTerrace, updateTerraceController);
 router.put("/terraces-inactive/:id", inactiveTerraceController);
+router.get("/terraces-search/:name", findTerraceByNameController);
 
 /* ROUTER TRACKING */
 router.get("/router-tracking/:id", findAllRouterTrackingController);

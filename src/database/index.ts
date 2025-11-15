@@ -88,8 +88,8 @@ export class DataBase {
     this.global = GlobalFactory(this.sequelize);
     this.termsAndConditions = TermsAndConditionsFactory(this.sequelize);
     this.action = ActionFactory(this.sequelize);
-    this.drivers = DriversFactory(this.sequelize);
     this.packages = PackagesFactory(this.sequelize);
+    this.drivers = DriversFactory(this.sequelize);
     this.guide = GuideFactory(this.sequelize);
     this.routerTracking = RouterTrackingFactory(this.sequelize);
     this.terrace = TerraceFactory(this.sequelize);
@@ -104,18 +104,23 @@ export class DataBase {
     this.sequelize
       .authenticate()
       // .sync({ alter: true, logging: console.log })
-      .then(() => {
+      .then(async () => {
         /* this.token.sync({ alter: true, logging: console.log });
          this.termsAndConditions.sync({ alter: true, logging: console.log }); 
         this.adminRoles.sync({ alter: true, logging: console.log });
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
-        //       this.drivers.sync({ alter: true, logging: console.log });
-        //     this.packages.sync({ alter: true, logging: console.log });
-        //  this.guide.sync({ alter: true, logging: console.log });
-        //this.routerTracking.sync({ alter: true, logging: console.log });
-        //  this.terrace.sync({ alter: true, logging: console.log });
-        //this.formReserve.sync({ alter: true, logging: console.log });
+        
+        // Sincronizar tablas padre primero
+        await this.drivers.sync({ alter: true, logging: console.log });
+        await this.guide.sync({ alter: true, logging: console.log });
+        await this.terrace.sync({ alter: true, logging: console.log });
+        
+        // Eliminar y recrear la tabla packages con las nuevas restricciones
+        await this.packages.sync({ alter: true, logging: console.log });
+        
+        await this.routerTracking.sync({ alter: true, logging: console.log });
+        //await this.formReserve.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => console.log(err));

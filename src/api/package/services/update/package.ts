@@ -4,19 +4,19 @@ import { WhereOptions } from "sequelize";
 
 export const updatePackage = async ({
   id,
-  ...driver
+  ...pkg
 }: Partial<PackagesAttributes>): Promise<PackagesAttributes | null> => {
   try {
     const packageExist = await DataBase.instance.packages.findByPk(id);
     if (!packageExist) throw new Error("Paquete no encontrado");
-    await DataBase.instance.packages.update(driver, {
+    await DataBase.instance.packages.update(pkg, {
       where: {
         id,
       },
     });
     return {
       ...packageExist.toJSON(),
-      ...driver,
+      ...pkg,
     };
   } catch (error) {
     throw error;

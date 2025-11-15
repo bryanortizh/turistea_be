@@ -10,7 +10,7 @@ import {
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
-import { findAllGuide, findOneGuide } from "../services/find/guide";
+import { allGuides, findAllGuide, findGuideByName, findOneGuide } from "../services/find/guide";
 import { createGuide } from "../services/create/guide";
 import { registerGuideImageService } from "../services/guide.service";
 import { updateGuide } from "../services/update/guide";
@@ -31,6 +31,20 @@ export const findAllGuideController = async (
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
 
+    next(createError(404, err));
+  }
+};
+
+export const allGuideController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const list = await allGuides();
+    res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
 };
@@ -196,4 +210,18 @@ export const inactiveGuideController = async (
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
+};
+
+export const findGuideByNameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const guides = await findGuideByName(req.params.name);
+    res.status(200).json(guides);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    next(createError(404, err));
+  } 
 };

@@ -11,10 +11,16 @@ import {
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
-import { findAllTerrace, findOneTerrace } from "../services/find/terrace";
+import {
+  allTerraces,
+  findAllTerrace,
+  findOneTerrace,
+  findTerraceByName,
+} from "../services/find/terrace";
 import { createTerrace } from "../services/create/terrace";
 import { registerTerraceImageService } from "../services/terrace.service";
 import { updateTerrace } from "../services/update/terrace";
+import { findDriverByName } from "../../drivers/services/find/driver";
 
 export const findAllTerraceController = async (
   req: Request,
@@ -35,6 +41,40 @@ export const findAllTerraceController = async (
     next(createError(404, err));
   }
 };
+
+export const allTerracesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const list = await allTerraces();
+    res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+
+export const findTerraceByNameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log(req.params.name);
+    const terrace = await findTerraceByName(req.params.name);
+    res.status(200).json(terrace);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+
 
 export const createTerraceController = async (
   req: Request,
@@ -140,7 +180,7 @@ export const updateTerraceController = async (
     // Manejar imágenes si vienen en el body
     if (req.body.image_photo || req.body.image_document) {
       const imageData: any = {};
-      
+
       if (req.body.image_photo) {
         const base64Data = req.body.image_photo.replace(
           /^data:image\/[a-z]+;base64,/,

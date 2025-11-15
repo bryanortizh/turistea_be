@@ -10,12 +10,11 @@ export interface PackagesAttributes {
   key_two?: string;
   size_two?: string;
   path_bg_two?: string;
-  name_district?: string;
-  name_province?: string;
   name_region?: string;
   id_driver?: number;
   id_terrace?: number;
   id_guide?: number;
+  quantity_person?: string;
   state?: boolean;
   created?: Date;
   updated?: Date;
@@ -85,6 +84,10 @@ export function PackagesFactory(sequelize: Sequelize): PackagesStatic {
       },
       id_guide: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      quantity_person: {
+        type: DataTypes.CHAR(2),
         allowNull: false,
       },
       state: {

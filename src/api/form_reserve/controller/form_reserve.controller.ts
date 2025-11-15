@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
+import { DataBase } from "../../../database";
 import { IToken } from "../../auth/passport/passport";
 import { createFormReserve } from "../services/create/form_reserve";
 import { findAllFormReserve, findOneFormReserve } from "../services/find/form_reserve";
@@ -152,10 +153,58 @@ export const findUserFormReservesController = async (
     const status = req.query.status as string;
     const state = req.query.state;
 
-    // Construir filtros con id_user del token
-    const whereConditions: any = {
-      id_user: user.userId,
-    };
+    // Obtener el email del usuario actual
+    const userRecord = await DataBase.instance.user.findOne({
+      where: { id: user.userId },
+      attributes: ['email']
+    });
+
+    if (!userRecord) {
+      return next(createError(404, "Usuario no encontrado"));
+    }
+
+    const userEmail = userRecord.email;
+
+    // Verificar si el usuario es un guide, terrace o driver mediante su email
+    const [guideRecord, terraceRecord, driverRecord] = await Promise.all([
+      DataBase.instance.guide.findOne({ where: { email: userEmail }, attributes: ['id'] }),
+      DataBase.instance.terrace.findOne({ where: { email: userEmail }, attributes: ['id'] }),
+      DataBase.instance.drivers.findOne({ where: { email: userEmail }, attributes: ['id'] })
+    ]);
+
+    let packageIds: number[] = [];
+
+    // Si es guide, terrace o driver, buscar los paquetes vinculados
+    if (guideRecord || terraceRecord || driverRecord) {
+      const packageWhere: any = { state: true };
+
+      if (guideRecord) {
+        packageWhere.id_guide = guideRecord.id;
+      } else if (terraceRecord) {
+        packageWhere.id_terrace = terraceRecord.id;
+      } else if (driverRecord) {
+        packageWhere.id_driver = driverRecord.id;
+      }
+
+      // Buscar paquetes vinculados
+      const packages = await DataBase.instance.packages.findAll({
+        where: packageWhere,
+        attributes: ['id']
+      });
+
+      packageIds = packages.map((pkg: any) => pkg.id);
+    }
+
+    // Construir filtros
+    const whereConditions: any = {};
+
+    // Si es guide, terrace o driver con paquetes vinculados
+    if (packageIds.length > 0) {
+      whereConditions.id_package = { [sequelize.Op.in]: packageIds };
+    } else {
+      // Si es un cliente regular, filtrar por id_user
+      whereConditions.id_user = user.userId;
+    }
     
     if (status !== undefined) {
       whereConditions.status_form = status;
