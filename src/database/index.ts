@@ -110,15 +110,15 @@ export class DataBase {
         this.adminRoles.sync({ alter: true, logging: console.log });
         this.admin.sync({ alter: true, logging: console.log });  */
         //this.user.sync({ alter: true, logging: console.log });
-        
+
         // Sincronizar tablas padre primero
-        await this.drivers.sync({ alter: true, logging: console.log });
-        await this.guide.sync({ alter: true, logging: console.log });
-        await this.terrace.sync({ alter: true, logging: console.log });
-        
+        //  await this.drivers.sync({ alter: true, logging: console.log });
+        // await this.guide.sync({ alter: true, logging: console.log });
+        // await this.terrace.sync({ alter: true, logging: console.log });
+
         // Eliminar y recrear la tabla packages con las nuevas restricciones
-        await this.packages.sync({ alter: true, logging: console.log });
-        
+        // await this.packages.sync({ alter: true, logging: console.log });
+
         await this.routerTracking.sync({ alter: true, logging: console.log });
         //await this.formReserve.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");

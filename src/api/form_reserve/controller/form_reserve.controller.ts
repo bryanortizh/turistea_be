@@ -55,7 +55,6 @@ export const findAllFormReserveController = async (
     const status = req.query.status as string;
     const state = req.query.state;
     const id_package = req.query.id_package;
-    const id_user = req.query.id_user;
 
     // Construir filtros dinámicamente
     const whereConditions: any = {};
@@ -72,10 +71,6 @@ export const findAllFormReserveController = async (
       whereConditions.id_package = Number(id_package);
     }
     
-    if (id_user !== undefined) {
-      whereConditions.id_user = Number(id_user);
-    }
-
     const result = await findAllFormReserve({
       page,
       where: whereConditions,
@@ -85,16 +80,52 @@ export const findAllFormReserveController = async (
       success: true,
       message: "Formularios de reserva obtenidos exitosamente",
       data: {
-        ...result,
-        // Parsear users_json para cada formulario si existe
-        rows: result.rows.map((form: any) => ({
-          ...form,
-          users_json: form.users_json ? JSON.parse(form.users_json) : null,
-        })),
+        page: result.page,
+        count: result.count,
+        // Convertir a JSON plano y parsear users_json
+        rows: result.rows.map((form: any) => {
+          const plainForm = form.toJSON ? form.toJSON() : form;
+          return {
+            ...plainForm,
+            users_json: plainForm.users_json ? JSON.parse(plainForm.users_json) : null,
+          };
+        }),
       },
     });
   } catch (err: any) {
     console.error("Error finding form reserves:", err);
+    if (err instanceof sequelize.ValidationError) {
+      next(createError(400, err.message));
+    } else {
+      next(createError(500, "Error interno del servidor"));
+    }
+  }
+};
+
+export const changeFormReserveStatusController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const formId = Number(req.params.id);
+    const newStatus = req.path.includes("approve") ? "approved" : "rejected";
+    if (!formId || isNaN(formId)) {
+      return next(createError(400, "ID de formulario inválido"));
+    }
+    const formReserve = await findOneFormReserve({ id: formId });
+    if (!formReserve) {
+      return next(createError(404, "Formulario de reserva no encontrado"));
+    }
+    await DataBase.instance.formReserve.update(
+      { status_form: newStatus, updated: new Date() },
+      { where: { id: formId } }
+    );
+    res.status(200).json({
+      success: true,
+      message: `Formulario de reserva ${newStatus} exitosamente`,
+    });
+  } catch (err: any) {
     if (err instanceof sequelize.ValidationError) {
       next(createError(400, err.message));
     } else {
@@ -223,7 +254,16 @@ export const findUserFormReservesController = async (
       success: true,
       message: "Formularios de reserva del usuario obtenidos exitosamente",
       data: {
-        ...result,
+        page: result.page,
+        count: result.count,
+        // Convertir a JSON plano y parsear users_json
+        rows: result.rows.map((form: any) => {
+          const plainForm = form.toJSON ? form.toJSON() : form;
+          return {
+            ...plainForm,
+            users_json: plainForm.users_json ? JSON.parse(plainForm.users_json) : null,
+          };
+        }),
       },
     });
   } catch (err: any) {

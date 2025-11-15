@@ -7,6 +7,7 @@ export const createRouterTracking = async ({
   name_district,
   name_province,
   route_json,
+  price_route,
   created_by,
   updated_by,
   created,
@@ -18,6 +19,7 @@ export const createRouterTracking = async ({
   name_province?: string;
   id_package?: number;
   route_json?: string;
+  price_route?: string;
   created_by?: number;
   updated_by?: number;
   created?: Date;
@@ -31,6 +33,7 @@ export const createRouterTracking = async ({
       name_district,
       name_province,
       route_json,
+      price_route,
       created,
       updated,
       created_by,

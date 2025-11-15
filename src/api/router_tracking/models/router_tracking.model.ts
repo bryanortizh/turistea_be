@@ -17,6 +17,7 @@ export interface RouterTrackingAttributes {
   path_bgthree?: string;
   id_package?: number;
   route_json?: string;
+  price_route?: string;
   state?: boolean;
   created?: Date;
   updated?: Date;
@@ -107,6 +108,10 @@ export function RouterTrackingFactory(
       state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      price_route: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
       },
       created: {
         type: DataTypes.DATE,

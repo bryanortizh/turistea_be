@@ -61,7 +61,7 @@ import {
   inactiveRouterTrackingController,
   updateRouterTrackingController,
 } from "../../router_tracking/controllers/router_tracking.controller";
-import { findAllFormReserveController, findOneFormReserveController } from "../../form_reserve/controller/form_reserve.controller";
+import { changeFormReserveStatusController, findAllFormReserveController, findOneFormReserveController } from "../../form_reserve/controller/form_reserve.controller";
 import { validateGetFormReserves } from "../../form_reserve/middlewares/form_reserve.validator";
 export const router: Router = Router();
 
@@ -130,3 +130,5 @@ router.put("/router-tracking-inactive/:id", inactiveRouterTrackingController);
 
 router.get("/form_reserves", validateGetFormReserves, findAllFormReserveController);
 router.get("/form_reserves/:id", findOneFormReserveController);
+router.put("/form_reserves_aprrove/:id", changeFormReserveStatusController);
+router.put("/form_reserves_reject/:id", changeFormReserveStatusController);
