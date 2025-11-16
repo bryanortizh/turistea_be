@@ -56,7 +56,8 @@ export default class Server {
   middlewares(): void {
      this._app.use(cors({ 
       origin: [
-        "http://localhost:4001",
+        "*",
+        "http://localhost:4200",
         "http://localhost:5173",
         "https://turisteaweb-production.up.railway.app",
         "https://127.0.0.1:4200"
