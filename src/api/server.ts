@@ -1,4 +1,6 @@
 import express, { Application, Response, Request, NextFunction } from "express";
+import { createServer, Server as HTTPServer } from "http";
+import { Server as SocketIOServer } from "socket.io";
 import { router as routerAuth } from "./auth/routes/auth.routes";
 import { router as routerAdminRoles } from "./admin/routes/admin.roles.routes";
 import { router as routerAdmin } from "./admin/routes/admin.routes";
@@ -20,20 +22,37 @@ import { renderImage } from "../helpers/render.image.routes";
 
 export default class Server {
   private _app: Application;
+  private _httpServer: HTTPServer;
+  private _io: SocketIOServer;
   private _port: number;
   private _router: Router;
+  
   constructor(port: number) {
     this._app = express();
+    this._httpServer = createServer(this._app);
+    this._io = new SocketIOServer(this._httpServer, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true
+      }
+    });
     this._router = Router();
     this._port = port;
     this.middlewares();
     this.routes();
+    this.socketEvents();
     this.errors();
   }
 
   static init(port: number): Server {
     return new Server(port);
   }
+  
+  get io(): SocketIOServer {
+    return this._io;
+  }
+  
   middlewares(): void {
     this._app.use(cors({ credentials: true }));
     this._app.use(morgan("dev"));
@@ -77,6 +96,16 @@ export default class Server {
 
   }
 
+  socketEvents(): void {
+    this._io.on("connection", (socket) => {
+      console.log("Cliente conectado:", socket.id);
+
+      socket.on("disconnect", () => {
+        console.log("Cliente desconectado:", socket.id);
+      });
+    });
+  }
+
   errors(): void {
     this._router.use((req: Request, res: Response, next) => {
       const err = new Error(`Not Fount - ${req.originalUrl}`);
@@ -95,6 +124,6 @@ export default class Server {
   }
 
   start(callback: () => void): void {
-    this._app.listen(this._port, callback);
+    this._httpServer.listen(this._port, callback);
   }
 }

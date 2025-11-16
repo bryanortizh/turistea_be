@@ -17,6 +17,7 @@ import { updateImagePerfil } from "../validator/user.custom";
 import {
   createFormReserveController,
   findUserFormReservesController,
+  pendingPayFormReserveController,
   pendingSingChangeStatusFormReserveController,
   pendingSingToPendingPayFormReserveController,
 } from "../../form_reserve/controller/form_reserve.controller";
@@ -56,5 +57,5 @@ router.put(
 );
 router.put(
   "/form_reserves/:id/pendingpayinprocess",
-  pendingSingToPendingPayFormReserveController
+  pendingPayFormReserveController
 );

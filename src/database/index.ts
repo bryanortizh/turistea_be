@@ -119,7 +119,7 @@ export class DataBase {
         // Eliminar y recrear la tabla packages con las nuevas restricciones
         // await this.packages.sync({ alter: true, logging: console.log });
 
-        await this.routerTracking.sync({ alter: true, logging: console.log });
+        // await this.routerTracking.sync({ alter: true, logging: console.log });
         //await this.formReserve.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })

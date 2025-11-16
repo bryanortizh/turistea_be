@@ -8,6 +8,7 @@ import {
   findAllFormReserve,
   findOneFormReserve,
 } from "../services/find/form_reserve";
+import { emitFormReserveStatusChange } from "../../../utils/socket";
 
 export const createFormReserveController = async (
   req: Request,
@@ -421,31 +422,54 @@ export const pendingPayFormReserveController = async (
 ) => {
   try {
     const formId = Number(req.params.id);
-    console.log("formId",formId)
+    console.log("formId", formId);
     const { status_form: newStatus } = req.body;
+    
     if (!formId || isNaN(formId)) {
       return next(createError(400, "ID de formulario inválido"));
     }
     if (!newStatus) {
       return next(createError(400, "El estado es requerido"));
     }
+    
     const formReserve = await findOneFormReserve({ id: formId });
 
     if (!formReserve) {
       return next(createError(404, "Formulario de reserva no encontrado"));
     }
-    if (formReserve.status_form !== "pending_pay") {
+    
+    const previousStatus = formReserve.status_form;
+    console.log("Estado anterior:", previousStatus);
+    console.log("Nuevo estado:", newStatus);
+    
+    if (previousStatus !== "pending_pay") {
       return next(
         createError(
           400,
-          `No se puede cambiar el estado. El formulario debe estar en estado 'pending_pay'. Estado actual: ${formReserve.status_form}`
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pending_pay'. Estado actual: ${previousStatus}`
         )
       );
     }
+    
     await DataBase.instance.formReserve.update(
       { status_form: newStatus, updated: new Date() },
       { where: { id: formId } }
-    );  
+    );
+    
+    console.log("✅ Estado actualizado en BD, intentando emitir socket...");
+    
+    try {
+      emitFormReserveStatusChange({
+        formReserveId: formId,
+        newStatus: newStatus,
+        previousStatus: previousStatus,
+        updatedAt: new Date()
+      });
+      console.log("✅ Socket emitido correctamente");
+    } catch (socketError) {
+      console.error("❌ Error al emitir socket:", socketError);
+    }
+    
     res.status(200).json({
       success: true,
       message: `Formulario de reserva cambiado a ${newStatus} exitosamente`,
@@ -454,9 +478,8 @@ export const pendingPayFormReserveController = async (
     console.error("Error changing form reserve status:", err);
     if (err instanceof sequelize.ValidationError) {
       next(createError(400, err.message));
-    } 
-    else {
+    } else {
       next(createError(500, "Error interno del servidor"));
     }
   }
-}
+};
