@@ -25,6 +25,26 @@ import {
 import { driverHasManyPackages } from "./associations/driver";
 import { GuideFactory, GuideStatic } from "../api/guide/models/guide.model";
 import { guideHasManyPackages } from "./associations/guide";
+import { terraceHasManyPackages } from "./associations/terrace";
+import {
+  RouterTrackingFactory,
+  RouterTrackingStatic,
+} from "../api/router_tracking/models/router_tracking.model";
+import {
+  TerraceFactory,
+  TerraceStatic,
+} from "../api/terrace/models/terrace.model";
+import { routerTrackingBelongsToRouterPackage } from "./associations/router_tracking";
+import {
+  FormReserve,
+  FormReserveFactory,
+  FormReserveStatic,
+} from "../api/form_reserve/model/form_reserve.model";
+import {
+  formReserveBellongToIdPackage,
+  formReserveBelongsToClient,
+  formReserveBelongToIdRouterTrackign,
+} from "./associations/form_reserve";
 
 export class DataBase {
   private static _instance: DataBase;
@@ -40,6 +60,9 @@ export class DataBase {
   public packages: PackagesStatic;
   public action: ActionStatic;
   public guide: GuideStatic;
+  public routerTracking: RouterTrackingStatic;
+  public terrace: TerraceStatic;
+  public formReserve: FormReserveStatic;
 
   constructor() {
     this.sequelize = new Sequelize(
@@ -98,9 +121,12 @@ export class DataBase {
     this.global = GlobalFactory(this.sequelize);
     this.termsAndConditions = TermsAndConditionsFactory(this.sequelize);
     this.action = ActionFactory(this.sequelize);
-    this.drivers = DriversFactory(this.sequelize);
     this.packages = PackagesFactory(this.sequelize);
+    this.drivers = DriversFactory(this.sequelize);
     this.guide = GuideFactory(this.sequelize);
+    this.routerTracking = RouterTrackingFactory(this.sequelize);
+    this.terrace = TerraceFactory(this.sequelize);
+    this.formReserve = FormReserveFactory(this.sequelize);
     this.associations();
     this.connectDb();
   }
@@ -110,7 +136,24 @@ export class DataBase {
   private connectDb(): void {
     this.sequelize
       .authenticate()
-      .then(() => {
+      // .sync({ alter: true, logging: console.log })
+      .then(async () => {
+        /* this.token.sync({ alter: true, logging: console.log });
+         this.termsAndConditions.sync({ alter: true, logging: console.log }); 
+        this.adminRoles.sync({ alter: true, logging: console.log });
+        this.admin.sync({ alter: true, logging: console.log });  */
+        //this.user.sync({ alter: true, logging: console.log });
+
+        // Sincronizar tablas padre primero
+        //  await this.drivers.sync({ alter: true, logging: console.log });
+        // await this.guide.sync({ alter: true, logging: console.log });
+        // await this.terrace.sync({ alter: true, logging: console.log });
+
+        // Eliminar y recrear la tabla packages con las nuevas restricciones
+        // await this.packages.sync({ alter: true, logging: console.log });
+
+        // await this.routerTracking.sync({ alter: true, logging: console.log });
+        //await this.formReserve.sync({ alter: true, logging: console.log });
         console.log("¡Run database!");
       })
       .catch((err) => {
@@ -127,9 +170,29 @@ export class DataBase {
       driver: this.drivers,
       package: this.packages,
     });
-    /*   guideHasManyPackages({
+    guideHasManyPackages({
       guide: this.guide,
       package: this.packages,
-    }); */
+    });
+    terraceHasManyPackages({
+      terrace: this.terrace,
+      package: this.packages,
+    });
+    routerTrackingBelongsToRouterPackage({
+      routerTracking: this.routerTracking,
+      routerPackage: this.packages,
+    });
+    formReserveBelongToIdRouterTrackign({
+      formReserve: this.formReserve,
+      routerTracking: this.routerTracking,
+    });
+    formReserveBellongToIdPackage({
+      formReserve: this.formReserve,
+      pkg: this.packages,
+    });
+    formReserveBelongsToClient({
+      formReserve: this.formReserve,
+      user: this.user,
+    });
   }
 }

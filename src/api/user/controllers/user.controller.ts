@@ -6,6 +6,7 @@ import {
   findAllUsersRecordType,
   findAllUsersRangeAge,
   SearchUser,
+  findAllPackage,
 } from "../services/find/index";
 import sequelize, { Op } from "sequelize";
 import { updateIdDevice, updateUser } from "../services/update";
@@ -17,6 +18,7 @@ import {
 } from "../services/user.service";
 import { findOneDriver } from "../../drivers/services/find/driver";
 import { findOneGuide } from "../../guide/services/find/guide";
+import { DataBase } from "../../../database";
 
 export const findAllUsersController = async (
   req: Request,
@@ -57,9 +59,9 @@ export const SeachUsersController = async (
   next: NextFunction
 ) => {
   try {
-    const { q } = req.params;
+    const { search } = req.params;
 
-    const regex = q.split(" ").join("|");
+    const regex = search.split(" ").join("|");
 
     const list = await SearchUser({
       regex,
@@ -166,6 +168,61 @@ export const findAllUsersRangeAgeController = async (
   }
 };
 
+export const getPackageUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const packages = await findAllPackage();
+    res.status(200).json(packages);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    next(createError(404, err));
+  }
+};
+
+export const getRouterPackageByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const packageId = Number(req.params.id);
+    const packageData = await DataBase.instance.routerTracking.findOne({
+      where: { id_package: packageId },
+      attributes: {
+        exclude: ["id_package", "createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: DataBase.instance.packages,
+          as: "package",
+          attributes: [
+            "id",
+            "title",
+            "description",
+            "name_region",
+            "path_bg",
+            "path_bg_two",
+          ],
+        },
+      ],
+    });
+
+    if (!packageData) {
+      return res
+        .status(404)
+        .json({ message: "Paquete no encontrado para la ruta" });
+    }
+
+    res.status(200).json(packageData);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    next(createError(404, err));
+  }
+};
+
 export const findProfileUserController = async (
   req: Request,
   res: Response,
@@ -212,7 +269,7 @@ export const findProfileUserController = async (
         : profileUser),
       role: role,
     };
-  
+
     res.status(200).json(profileWithRole);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));

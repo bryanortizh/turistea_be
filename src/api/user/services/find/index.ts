@@ -132,9 +132,13 @@ export const findOneUser = async (
   }
 };
 
-
-
-
+export const findAllPackage = async () => {
+  try {
+    return await DataBase.instance.packages.findAll({});
+  } catch (err) {
+    throw err;
+  }
+};
 
 export const findUserById = async ({
   id,

@@ -10,7 +10,7 @@ import {
 import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
-import { findAllGuide, findOneGuide } from "../services/find/guide";
+import { allGuides, findAllGuide, findGuideByName, findOneGuide } from "../services/find/guide";
 import { createGuide } from "../services/create/guide";
 import { registerGuideImageService } from "../services/guide.service";
 import { updateGuide } from "../services/update/guide";
@@ -31,6 +31,20 @@ export const findAllGuideController = async (
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
 
+    next(createError(404, err));
+  }
+};
+
+export const allGuideController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const list = await allGuides();
+    res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
 };
@@ -134,32 +148,39 @@ export const updateGuideController = async (
   try {
     const user = req.user as IToken;
 
+    let imagen = {};
+
+    // Manejar imágenes si vienen en el body
+    if (req.body.image_photo || req.body.image_document) {
+      const imageData: any = {};
+      
+      if (req.body.image_photo) {
+        const base64Data = req.body.image_photo.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_photo = Buffer.from(base64Data, "base64");
+      }
+
+      if (req.body.image_document) {
+        const base64Document = req.body.image_document.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_document = Buffer.from(base64Document, "base64");
+      }
+
+      imagen = await registerGuideImageService({
+        ...imageData,
+        guideId: Number(req.params.id),
+      });
+    }
+
     const guide = await updateGuide({
       ...req.body,
       updated_by: user.userId,
       id: Number(req.params.id),
     });
-
-    let imagen = {};
-
-    // Manejar imágenes si vienen en el body
-    if (req.body.image_photo && req.body.image_document) {
-      const base64Data = req.body.image_photo.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      const base64Document = req.body.image_document.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      imagen = await registerGuideImageService({
-        image_document: Buffer.from(base64Document, "base64"),
-        image_photo: Buffer.from(base64Data, "base64"),
-        guideId: Number(req.params.id),
-      });
-    }
 
     res.status(200).json({
       ...guide,
@@ -189,4 +210,18 @@ export const inactiveGuideController = async (
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
+};
+
+export const findGuideByNameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const guides = await findGuideByName(req.params.name);
+    res.status(200).json(guides);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    next(createError(404, err));
+  } 
 };

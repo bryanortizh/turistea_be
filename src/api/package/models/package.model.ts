@@ -7,10 +7,14 @@ export interface PackagesAttributes {
   key?: string;
   size?: string;
   path_bg?: string;
-  name_district?: string;
-  name_province?: string;
+  key_two?: string;
+  size_two?: string;
+  path_bg_two?: string;
   name_region?: string;
   id_driver?: number;
+  id_terrace?: number;
+  id_guide?: number;
+  quantity_person?: string;
   state?: boolean;
   created?: Date;
   updated?: Date;
@@ -55,17 +59,35 @@ export function PackagesFactory(sequelize: Sequelize): PackagesStatic {
         type: DataTypes.STRING(200),
         allowNull: true,
       },
-      name_district: {
+      key_two: {
         type: DataTypes.STRING(200),
+        allowNull: true,
       },
-      name_province: {
+      size_two: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
+      path_bg_two: {
         type: DataTypes.STRING(200),
+        allowNull: true,
       },
       name_region: {
         type: DataTypes.STRING(200),
       },
       id_driver: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      id_terrace: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      id_guide: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      quantity_person: {
+        type: DataTypes.CHAR(2),
         allowNull: false,
       },
       state: {

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   findProfileUserController,
+  getPackageUserController,
+  getRouterPackageByIdController,
   udpateDaySessionUserController,
   updateGenderAndDateOfBirthController,
   updateImagePerfilServiceController,
@@ -12,7 +14,16 @@ import {
   updatePasswordUserValidator,
 } from "../middlewares/user.validator";
 import { updateImagePerfil } from "../validator/user.custom";
+import {
+  createFormReserveController,
+  findUserFormReservesController,
+  pendingPayFormReserveController,
+  pendingSingChangeStatusFormReserveController,
+  pendingSingToPendingPayFormReserveController,
+} from "../../form_reserve/controller/form_reserve.controller";
+import { validateCreateFormReserve } from "../../form_reserve/middlewares/form_reserve.validator";
 export const router: Router = Router();
+
 router.get("/", findProfileUserController);
 router.put("/daysession", udpateDaySessionUserController);
 router.put(
@@ -27,3 +38,24 @@ router.put(
 );
 router.put("/terms/conditions", updateTermsAndConditionsController);
 router.put("/image", updateImagePerfil, updateImagePerfilServiceController);
+router.get("/packages", getPackageUserController);
+router.get("/router-packages/:id", getRouterPackageByIdController);
+
+router.post(
+  "/form_reserves",
+  validateCreateFormReserve,
+  createFormReserveController
+);
+router.get("/form_reserves", findUserFormReservesController);
+router.put(
+  "/form_reserves/:id/pending_sing",
+  pendingSingChangeStatusFormReserveController
+);
+router.put(
+  "/form_reserves/:id/pending_pay",
+  pendingSingToPendingPayFormReserveController
+);
+router.put(
+  "/form_reserves/:id/pendingpayinprocess",
+  pendingPayFormReserveController
+);

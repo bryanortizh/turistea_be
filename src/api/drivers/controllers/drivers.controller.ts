@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import sequelize from "sequelize";
-import { findAllDrivers, findOneDriver } from "../services/find/driver";
+import {
+  allDrivers,
+  findAllDrivers,
+  findDriverByName,
+  findOneDriver,
+} from "../services/find/driver";
 import { createDriver } from "../services/create/driver";
 import { IToken } from "../../auth/passport/passport";
 import { updateDriver } from "../services/update/driver";
@@ -12,19 +17,64 @@ import { generate } from "generate-password";
 import rn from "random-number";
 import CryptoJS from "crypto-js";
 
+
 export const findAllDriverController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    const searchTerm = req.params.search;
+    const whereCondition: any = {
+      state: Number(req.query.state),
+    };
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      whereCondition[sequelize.Op.or] = [
+        { name: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { lastname: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { email: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { cellphone: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { number_document: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { license_plate: { [sequelize.Op.like]: `%${searchTerm}%` } },
+      ];
+    }
+
     const list = await findAllDrivers({
       page: Number(req.query.page),
-      where: {
-        state: Number(req.query.state),
-      },
+      where: whereCondition,
     });
     res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+export const allDriversController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const list = await allDrivers();
+    res.status(200).json(list);
+  } catch (err: any) {
+    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+
+    next(createError(404, err));
+  }
+};
+
+export const findDriverByNameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const driver = await findDriverByName(req.params.name);
+    res.status(200).json(driver);
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
 
@@ -82,11 +132,6 @@ export const updateDriverController = async (
 ) => {
   try {
     const user = req.user as IToken;
-    const driver = await updateDriver({
-      ...req.body,
-      updated_by: user.userId,
-      id: Number(req.params.id),
-    });
 
     let imagen = {};
 
@@ -107,6 +152,13 @@ export const updateDriverController = async (
         driverId: Number(req.params.id),
       });
     }
+
+    const driver = await updateDriver({
+      ...req.body,
+      updated_by: user.userId,
+      id: Number(req.params.id),
+    });
+
     res.status(200).json({
       ...driver,
       ...imagen,

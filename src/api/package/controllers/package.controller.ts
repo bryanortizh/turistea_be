@@ -5,9 +5,9 @@ import { IToken } from "../../auth/passport/passport";
 import { findAllPackages } from "../services/find/package";
 import { createPackage } from "../services/create/package";
 import {
-  registerPackageImageService,
   updatePackage,
 } from "../services/update/package";
+import { registerPackageImageService } from "../services/package.service";
 
 export const findAllPackagesController = async (
   req: Request,
@@ -41,26 +41,34 @@ export const createPackageController = async (
       ...req.body,
       created_by: user.userId,
       updated_by: user.userId,
-      state: false,
+      state: true,
     });
     let imagen = {};
 
-    if (req.body.image_car && req.body.image_document) {
-      const base64Data = req.body.image_car.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      const base64Document = req.body.image_document.replace(
-        /^data:image\/[a-z]+;base64,/,
-        ""
-      );
-
-      imagen = await registerPackageImageService({
-        image: Buffer.from(base64Document, "base64"),
+    if (req.body.image_bg || req.body.image_bg_two) {
+      const imageData: any = {
         packageId: pkg.id!,
-      });
+      };
+
+      if (req.body.image_bg) {
+        const base64Data = req.body.image_bg.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg = Buffer.from(base64Data, "base64");
+      }
+
+      if (req.body.image_bg_two) {
+        const base64DataTwo = req.body.image_bg_two.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg_two = Buffer.from(base64DataTwo, "base64");
+      }
+
+      imagen = await registerPackageImageService(imageData);
     }
+
     res.status(200).json({
       ...pkg,
       ...imagen,
@@ -78,12 +86,43 @@ export const updatePackageController = async (
 ) => {
   try {
     const user = req.user as IToken;
-    const driver = await updatePackage({
+
+    let imagen = {};
+
+    if (req.body.image_bg || req.body.image_bg_two) {
+      const imageData: any = {
+        packageId: req.params.id as unknown as number,
+      };
+
+      if (req.body.image_bg) {
+        const base64Data = req.body.image_bg.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg = Buffer.from(base64Data, "base64");
+      }
+
+      if (req.body.image_bg_two) {
+        const base64DataTwo = req.body.image_bg_two.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        );
+        imageData.image_bg_two = Buffer.from(base64DataTwo, "base64");
+      }
+
+      imagen = await registerPackageImageService(imageData);
+    }
+
+    const pkg = await updatePackage({
       ...req.body,
       updated_by: user.userId,
       id: Number(req.params.id),
     });
-    res.status(200).json(driver);
+
+    res.status(200).json({
+      ...pkg,
+      ...imagen,
+    });
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));

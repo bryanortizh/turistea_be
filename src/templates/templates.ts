@@ -141,6 +141,75 @@ export const template_create_guide = (vars: ITemplatePassword) => {
   `;
 };
 
+export const template_create_terrace = (vars: ITemplatePassword) => {
+  return `
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenida Terramoza - Turistea</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);">
+    
+    <!-- Header -->
+    <div style="background: linear-gradient(160deg, #053654, #4c9bae); color: white; padding: 30px 20px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">Turistea</div>
+      <div style="font-size: 18px; opacity: 0.9;">Bienvenida a nuestro equipo</div>
+    </div>
+    
+    <!-- Body -->
+    <div style="padding: 40px 30px;">
+      <h2 style="color: #053654; font-weight: 700; margin-bottom: 15px; font-size: 24px; margin-top: 0;">¡Hola ${vars.names}!</h2>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;">Te damos la más cordial bienvenida a Turistea como <strong>Terramoza</strong>. Estamos emocionados de tenerte en nuestro equipo y confiamos en que brindarás un excelente servicio gastronómico a nuestros turistas.</p>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;">A continuación, encontrarás tus credenciales de acceso:</p>
+      
+      <!-- Password Container -->
+      <div style="background-color: #dee9eb; border-radius: 10px; padding: 25px; margin: 25px 0; border-left: 5px solid #4c9bae;">
+        <div style="margin-bottom: 10px;">
+          <strong>Usuario:</strong> ${vars.email}
+        </div>
+        <div style="margin-bottom: 10px;">
+          <strong>Contraseña temporal:</strong>
+        </div>
+        <div style="font-family: monospace; font-size: 20px; background-color: white; padding: 15px; border-radius: 8px; text-align: center; border: 2px dashed #4c9bae; margin-top: 10px; font-weight: bold; letter-spacing: 2px;">
+          ${vars.password}
+        </div>
+      </div>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;"><strong>Por seguridad, te recomendamos cambiar tu contraseña después de iniciar sesión por primera vez.</strong></p>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;">Una vez que ingreses, podrás:</p>
+      
+      <ul style="line-height: 1.6; color: #333; margin-bottom: 15px;">
+        <li>Gestionar tu horario de trabajo</li>
+        <li>Ver tus asignaciones de servicio</li>
+        <li>Actualizar tu perfil y especialidades culinarias</li>
+        <li>Consultar tus ingresos y evaluaciones</li>
+        <li>Acceder a recetas y menús tradicionales</li>
+        <li>Coordinarte con guías y conductores</li>
+      </ul>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;">Si tienes alguna pregunta sobre el uso de la plataforma o necesitas información adicional sobre nuestros protocolos de servicio, no dudes en contactar a nuestro equipo de soporte.</p>
+      
+      <p style="line-height: 1.6; color: #333; margin-bottom: 15px;">Saludos cordiales,<br><strong>El equipo de Turistea</strong></p>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background-color: #dee9eb; padding: 25px 20px; text-align: center; color: #053654; font-size: 14px; line-height: 1.5;">
+      <p style="margin: 0 0 10px 0;">© 2025 Turistea. Todos los derechos reservados.</p>
+      <p style="margin: 0 0 10px 0;">Este es un mensaje automático, por favor no respondas a este correo.</p>
+      <p style="margin: 0;">Soporte para terramozas: terramozas@turistea.com</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+};
+
 export const template_create_client = (vars: ITemplateClient) => {
   return `
 <!DOCTYPE html>

@@ -3,35 +3,41 @@ import { DataBase } from "../../../../database";
 export const createPackage = async ({
   title,
   description,
-  key,
-  size,
-  path_bg,
-  name_district,
-  name_province,
   name_region,
   id_driver,
+  id_terrace,
+  id_guide,
+  quantity_person,
+  created_by,
+  updated_by,
+  created,
+  updated,
 }: {
   title?: string;
   description?: string;
-  key?: string;
-  size?: string;
-  path_bg?: string;
-  name_district?: string;
-  name_province?: string;
   name_region?: string;
   id_driver?: number;
+  quantity_person?: string;
+  id_terrace?: number;
+  id_guide?: number;
+  created_by?: number;
+  updated_by?: number;
+  created?: Date;
+  updated?: Date;
 }) => {
   try {
     return await DataBase.instance.packages.create({
       title,
       description,
-      key,
-      size,
-      path_bg,
-      name_district,
-      name_province,
       name_region,
       id_driver,
+      id_terrace,
+      quantity_person,
+      id_guide,
+      created,
+      updated,
+      created_by,
+      updated_by
     });
   } catch (err) {
     throw err;

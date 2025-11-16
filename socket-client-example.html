@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO - Form Reserve Status</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .notification {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .notification-details {
+            font-size: 14px;
+            color: #666;
+        }
+        #notifications {
+            margin-top: 20px;
+        }
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Monitoreo de Cambios de Estado - Reservas</h1>
+        
+        <div id="connection-status" class="status disconnected">
+            Desconectado del servidor
+        </div>
+
+        <div id="notifications">
+            <h3>Notificaciones:</h3>
+            <button class="clear-btn" onclick="clearNotifications()">Limpiar Notificaciones</button>
+            <div id="notification-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración - Cambiar según tu servidor
+        const SOCKET_URL = 'http://localhost:5000'; // Cambia esto por tu URL del backend
+        
+        // Conectar a Socket.IO
+        const socket = io(SOCKET_URL, {
+            transports: ['websocket', 'polling']
+        });
+
+        const connectionStatus = document.getElementById('connection-status');
+        const notificationList = document.getElementById('notification-list');
+
+        // Evento: Conexión exitosa
+        socket.on('connect', () => {
+            console.log('✅ Conectado al servidor Socket.IO');
+            connectionStatus.textContent = '✅ Conectado al servidor';
+            connectionStatus.className = 'status connected';
+        });
+
+        // Evento: Desconexión
+        socket.on('disconnect', () => {
+            console.log('❌ Desconectado del servidor');
+            connectionStatus.textContent = '❌ Desconectado del servidor';
+            connectionStatus.className = 'status disconnected';
+        });
+
+        // Evento: Escuchar cambios de estado en reservas
+        socket.on('form_reserve_status_changed', (data) => {
+            console.log('🔔 Estado de reserva cambiado:', data);
+            
+            // Crear notificación visual
+            addNotification(data);
+            
+            // Opcional: Mostrar notificación del navegador
+            if (Notification.permission === 'granted') {
+                new Notification('Estado de Reserva Actualizado', {
+                    body: `Reserva #${data.formReserveId} cambió a: ${data.newStatus}`,
+                    icon: '/favicon.ico'
+                });
+            }
+        });
+
+        // Función para agregar notificación al DOM
+        function addNotification(data) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            const statusTranslation = {
+                'pending': 'Pendiente',
+                'pending_pay': 'Pendiente de Pago',
+                'reserve': 'Reservado',
+                'rejected': 'Rechazado',
+                'done': 'Completado',
+                'inprocesstravel': 'En Viaje'
+            };
+            
+            notification.innerHTML = `
+                <div class="notification-title">
+                    📋 Reserva #${data.formReserveId} actualizada
+                </div>
+                <div class="notification-details">
+                    <strong>Estado anterior:</strong> ${statusTranslation[data.previousStatus] || data.previousStatus}<br>
+                    <strong>Nuevo estado:</strong> ${statusTranslation[data.newStatus] || data.newStatus}<br>
+                    <strong>Fecha:</strong> ${new Date(data.updatedAt).toLocaleString('es-ES')}
+                </div>
+            `;
+            
+            notificationList.insertBefore(notification, notificationList.firstChild);
+            
+            // Limitar a 10 notificaciones
+            const notifications = notificationList.getElementsByClassName('notification');
+            if (notifications.length > 10) {
+                notificationList.removeChild(notifications[notifications.length - 1]);
+            }
+        }
+
+        // Función para limpiar notificaciones
+        function clearNotifications() {
+            notificationList.innerHTML = '';
+        }
+
+        // Pedir permiso para notificaciones del navegador
+        if (Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Información de conexión
+        console.log('🚀 Cliente Socket.IO iniciado');
+        console.log('📡 Conectando a:', SOCKET_URL);
+    </script>
+</body>
+</html>

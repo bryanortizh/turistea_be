@@ -27,9 +27,11 @@ import {
   signupAdminValidator,
   signupValidator,
 } from "../middlewares/auth.validator";
+import { getPackageUserController } from "../../user/controllers/user.controller";
 
 export const router: Router = Router();
-
+/* Package User Routes */
+/*  */
 router.post("/signup", signupValidator, signUpController);
 router.post("/signin", signinValidator, signInController);
 router.post("/signin-google", googleSignInController);
