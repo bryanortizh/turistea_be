@@ -32,9 +32,14 @@ export default class Server {
     this._httpServer = createServer(this._app);
     this._io = new SocketIOServer(this._httpServer, {
       cors: {
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        credentials: true
+        origin: [
+          "http://localhost:3000",
+          "http://localhost:5173",
+          "https://turisteaweb-production.up.railway.app"
+        ],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"]
       }
     });
     this._router = Router();
@@ -54,7 +59,16 @@ export default class Server {
   }
   
   middlewares(): void {
-    this._app.use(cors({ credentials: true }));
+    this._app.use(cors({ 
+      origin: [
+        "http://localhost:4001",
+        "http://localhost:5173",
+        "https://turisteaweb-production.up.railway.app"
+      ],
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      allowedHeaders: ["Content-Type", "Authorization"]
+    }));
     this._app.use(morgan("dev"));
     this._app.use(express.json({ limit: "350mb" }));
     this._app.use(
