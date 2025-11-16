@@ -58,7 +58,8 @@ export default class Server {
       origin: [
         "http://localhost:4001",
         "http://localhost:5173",
-        "https://turisteaweb-production.up.railway.app"
+        "https://turisteaweb-production.up.railway.app",
+        "https://127.0.0.1:4200"
       ],
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
