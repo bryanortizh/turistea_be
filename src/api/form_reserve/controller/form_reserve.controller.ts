@@ -4,7 +4,10 @@ import sequelize from "sequelize";
 import { DataBase } from "../../../database";
 import { IToken } from "../../auth/passport/passport";
 import { createFormReserve } from "../services/create/form_reserve";
-import { findAllFormReserve, findOneFormReserve } from "../services/find/form_reserve";
+import {
+  findAllFormReserve,
+  findOneFormReserve,
+} from "../services/find/form_reserve";
 
 export const createFormReserveController = async (
   req: Request,
@@ -15,7 +18,7 @@ export const createFormReserveController = async (
     const user = req.user as IToken;
 
     let processedUsersJson = req.body.users_json;
-    if (req.body.users_json && typeof req.body.users_json === 'object') {
+    if (req.body.users_json && typeof req.body.users_json === "object") {
       processedUsersJson = JSON.stringify(req.body.users_json);
     }
 
@@ -58,19 +61,19 @@ export const findAllFormReserveController = async (
 
     // Construir filtros dinámicamente
     const whereConditions: any = {};
-    
+
     if (status !== undefined) {
       whereConditions.status_form = status;
     }
-    
+
     if (state !== undefined) {
       whereConditions.state = Boolean(Number(state));
     }
-    
+
     if (id_package !== undefined) {
       whereConditions.id_package = Number(id_package);
     }
-    
+
     const result = await findAllFormReserve({
       page,
       where: whereConditions,
@@ -87,7 +90,9 @@ export const findAllFormReserveController = async (
           const plainForm = form.toJSON ? form.toJSON() : form;
           return {
             ...plainForm,
-            users_json: plainForm.users_json ? JSON.parse(plainForm.users_json) : null,
+            users_json: plainForm.users_json
+              ? JSON.parse(plainForm.users_json)
+              : null,
           };
         }),
       },
@@ -109,23 +114,47 @@ export const changeFormReserveStatusController = async (
 ) => {
   try {
     const formId = Number(req.params.id);
-    const newStatus = req.path.includes("approve") ? "approved" : "rejected";
+    const { status_form: newStatus } = req.body;
+
     if (!formId || isNaN(formId)) {
       return next(createError(400, "ID de formulario inválido"));
     }
+
+    if (!newStatus) {
+      return next(createError(400, "El estado es requerido"));
+    }
+
+    // Validar que el nuevo estado sea 'done' o 'rejected'
+    if (newStatus !== "reserve" && newStatus !== "rejected") {
+      return next(createError(400, "El estado debe ser 'done' o 'rejected'"));
+    }
+
     const formReserve = await findOneFormReserve({ id: formId });
+
     if (!formReserve) {
       return next(createError(404, "Formulario de reserva no encontrado"));
     }
+
+    if (formReserve.status_form !== "pendingpayinprocess") {
+      return next(
+        createError(
+          400,
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pendingpayinprocess''. Estado actual: ${formReserve.status_form}`
+        )
+      );
+    }
+
     await DataBase.instance.formReserve.update(
       { status_form: newStatus, updated: new Date() },
       { where: { id: formId } }
     );
+
     res.status(200).json({
       success: true,
-      message: `Formulario de reserva ${newStatus} exitosamente`,
+      message: `Formulario de reserva cambiado a ${newStatus} exitosamente`,
     });
   } catch (err: any) {
+    console.error("Error changing form reserve status:", err);
     if (err instanceof sequelize.ValidationError) {
       next(createError(400, err.message));
     } else {
@@ -155,7 +184,9 @@ export const findOneFormReserveController = async (
     // Parsear users_json si existe
     const formWithParsedJson = {
       ...formReserve,
-      users_json: formReserve.users_json ? JSON.parse(formReserve.users_json) : null,
+      users_json: formReserve.users_json
+        ? JSON.parse(formReserve.users_json)
+        : null,
     };
 
     res.status(200).json({
@@ -187,7 +218,7 @@ export const findUserFormReservesController = async (
     // Obtener el email del usuario actual
     const userRecord = await DataBase.instance.user.findOne({
       where: { id: user.userId },
-      attributes: ['email']
+      attributes: ["email"],
     });
 
     if (!userRecord) {
@@ -198,9 +229,18 @@ export const findUserFormReservesController = async (
 
     // Verificar si el usuario es un guide, terrace o driver mediante su email
     const [guideRecord, terraceRecord, driverRecord] = await Promise.all([
-      DataBase.instance.guide.findOne({ where: { email: userEmail }, attributes: ['id'] }),
-      DataBase.instance.terrace.findOne({ where: { email: userEmail }, attributes: ['id'] }),
-      DataBase.instance.drivers.findOne({ where: { email: userEmail }, attributes: ['id'] })
+      DataBase.instance.guide.findOne({
+        where: { email: userEmail },
+        attributes: ["id"],
+      }),
+      DataBase.instance.terrace.findOne({
+        where: { email: userEmail },
+        attributes: ["id"],
+      }),
+      DataBase.instance.drivers.findOne({
+        where: { email: userEmail },
+        attributes: ["id"],
+      }),
     ]);
 
     let packageIds: number[] = [];
@@ -220,7 +260,7 @@ export const findUserFormReservesController = async (
       // Buscar paquetes vinculados
       const packages = await DataBase.instance.packages.findAll({
         where: packageWhere,
-        attributes: ['id']
+        attributes: ["id"],
       });
 
       packageIds = packages.map((pkg: any) => pkg.id);
@@ -236,11 +276,11 @@ export const findUserFormReservesController = async (
       // Si es un cliente regular, filtrar por id_user
       whereConditions.id_user = user.userId;
     }
-    
+
     if (status !== undefined) {
       whereConditions.status_form = status;
     }
-    
+
     if (state !== undefined) {
       whereConditions.state = Boolean(Number(state));
     }
@@ -261,7 +301,9 @@ export const findUserFormReservesController = async (
           const plainForm = form.toJSON ? form.toJSON() : form;
           return {
             ...plainForm,
-            users_json: plainForm.users_json ? JSON.parse(plainForm.users_json) : null,
+            users_json: plainForm.users_json
+              ? JSON.parse(plainForm.users_json)
+              : null,
           };
         }),
       },
@@ -275,3 +317,146 @@ export const findUserFormReservesController = async (
     }
   }
 };
+
+export const pendingSingChangeStatusFormReserveController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const formId = Number(req.params.id);
+    console.log("formId",formId)
+    const { status_form: newStatus } = req.body;
+
+    if (!formId || isNaN(formId)) {
+      return next(createError(400, "ID de formulario inválido"));
+    }
+    if (!newStatus) {
+      return next(createError(400, "El estado es requerido"));
+    }
+    const formReserve = await findOneFormReserve({ id: formId });
+
+    if (!formReserve) {
+      return next(createError(404, "Formulario de reserva no encontrado"));
+    }
+    if (formReserve.status_form !== "pending") {
+      return next(
+        createError(
+          400,
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pending'. Estado actual: ${formReserve.status_form}`
+        )
+      );
+    }
+    await DataBase.instance.formReserve.update(
+      { status_form: newStatus, updated: new Date() },
+      { where: { id: formId } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `Formulario de reserva cambiado a ${newStatus} exitosamente`,
+    });
+  } catch (err: any) {
+    console.error("Error changing form reserve status:", err);
+    if (err instanceof sequelize.ValidationError) {
+      next(createError(400, err.message));
+    } else {
+      next(createError(500, "Error interno del servidor"));
+    }
+  }
+};
+
+
+export const pendingSingToPendingPayFormReserveController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const formId = Number(req.params.id);
+    console.log("formId",formId)
+    const { status_form: newStatus } = req.body;
+    if (!formId || isNaN(formId)) {
+      return next(createError(400, "ID de formulario inválido"));
+    }
+    if (!newStatus) {
+      return next(createError(400, "El estado es requerido"));
+    }
+    const formReserve = await findOneFormReserve({ id: formId });
+
+    if (!formReserve) {
+      return next(createError(404, "Formulario de reserva no encontrado"));
+    }
+    if (formReserve.status_form !== "pending_pay") {
+      return next(
+        createError(
+          400,
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pending_sign'. Estado actual: ${formReserve.status_form}`
+        )
+      );
+    }
+    await DataBase.instance.formReserve.update(
+      { status_form: newStatus, updated: new Date() },
+      { where: { id: formId } }
+    );
+    res.status(200).json({
+      success: true,
+      message: `Formulario de reserva cambiado a ${newStatus} exitosamente`,
+    });
+  } catch (err: any) {
+    console.error("Error changing form reserve status:", err);
+    if (err instanceof sequelize.ValidationError) {
+      next(createError(400, err.message));
+    } 
+    else {
+      next(createError(500, "Error interno del servidor"));
+    }
+  }
+}
+
+export const pendingPayFormReserveController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const formId = Number(req.params.id);
+    console.log("formId",formId)
+    const { status_form: newStatus } = req.body;
+    if (!formId || isNaN(formId)) {
+      return next(createError(400, "ID de formulario inválido"));
+    }
+    if (!newStatus) {
+      return next(createError(400, "El estado es requerido"));
+    }
+    const formReserve = await findOneFormReserve({ id: formId });
+
+    if (!formReserve) {
+      return next(createError(404, "Formulario de reserva no encontrado"));
+    }
+    if (formReserve.status_form !== "pending_pay") {
+      return next(
+        createError(
+          400,
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pending_pay'. Estado actual: ${formReserve.status_form}`
+        )
+      );
+    }
+    await DataBase.instance.formReserve.update(
+      { status_form: newStatus, updated: new Date() },
+      { where: { id: formId } }
+    );  
+    res.status(200).json({
+      success: true,
+      message: `Formulario de reserva cambiado a ${newStatus} exitosamente`,
+    });
+  } catch (err: any) {
+    console.error("Error changing form reserve status:", err);
+    if (err instanceof sequelize.ValidationError) {
+      next(createError(400, err.message));
+    } 
+    else {
+      next(createError(500, "Error interno del servidor"));
+    }
+  }
+}

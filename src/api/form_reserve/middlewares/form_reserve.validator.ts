@@ -112,13 +112,14 @@ export const validateGetFormReserves = [
       "pending",
       "pendingsing",
       "pendingpay",
+      "pendingpayinprocess",
       "reserve",
       "inprocesstravel",
       "done",
       "rejected",
     ])
     .withMessage(
-      "El estado debe ser: pending, pendingsing, pendingpay, reserve, inprocesstravel, done o rejected"
+      "El estado debe ser: pending, pendingsing, pendingpay, reserve, inprocesstravel, pendingpayinprocess, done o rejected"
     ),
   query("state")
     .optional()
