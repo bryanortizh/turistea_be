@@ -54,7 +54,16 @@ export default class Server {
   }
   
   middlewares(): void {
-    this._app.use(cors({ credentials: true }));
+     this._app.use(cors({ 
+      origin: [
+        "http://localhost:4001",
+        "http://localhost:5173",
+        "https://turisteaweb-production.up.railway.app"
+      ],
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      allowedHeaders: ["Content-Type", "Authorization"]
+    }));
     this._app.use(morgan("dev"));
     this._app.use(express.json({ limit: "350mb" }));
     this._app.use(
