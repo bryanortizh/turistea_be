@@ -110,16 +110,16 @@ export const validateGetFormReserves = [
     .optional()
     .isIn([
       "pending",
-      "pendingsing",
-      "pendingpay",
-      "pendingpayinprocess",
+      "pending_sign",
+      "pending_pay",
+      "pending_pay_in_process",
       "reserve",
-      "inprocesstravel",
+      "in_process_travel",
       "done",
       "rejected",
     ])
     .withMessage(
-      "El estado debe ser: pending, pendingsing, pendingpay, reserve, inprocesstravel, pendingpayinprocess, done o rejected"
+      "El estado debe ser: pending, pendingsign, pending_pay, reserve, in_process_travel, pending_pay_in_process, done o rejected"
     ),
   query("state")
     .optional()
