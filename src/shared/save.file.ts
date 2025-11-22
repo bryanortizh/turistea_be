@@ -1,4 +1,4 @@
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 50);
 import path from "path";
@@ -18,6 +18,8 @@ export const saveImageInServer = async ({
   try {
     const key: string = `${await nanoid()}`;
     const _path: string = path.join(config.DIR!, "assets", key);
+    // Ensure the assets directory exists before writing (avoid ENOENT)
+    await mkdir(path.dirname(_path), { recursive: true });
     const { value, unit } = bytesize(buffer.byteLength);
     await writeFile(_path, buffer);
     return { key, path: _path, size: value + unit };
@@ -34,6 +36,8 @@ export const saveImageInServerDriver = async ({
   try {
     const key: string = `${await nanoid()}`;
     const _path: string = path.join(config.DIR!, "assets", key);
+    // Ensure the assets directory exists before writing (avoid ENOENT)
+    await mkdir(path.dirname(_path), { recursive: true });
     const { value, unit } = bytesize(buffer.byteLength);
     await writeFile(_path, buffer);
     return { key, path: _path, size: value + unit };
@@ -49,6 +53,8 @@ export const saveImageInServerV2 = async ({
   try {
     const key: string = `${await nanoid()}`;
     const _path: string = path.join(config.DIR!, "assets", key);
+    // Ensure the assets directory exists before writing (avoid ENOENT)
+    await mkdir(path.dirname(_path), { recursive: true });
     const { value, unit } = bytesize(buffer.byteLength);
     await writeFile(_path, buffer);
     return {

@@ -1,25 +1,27 @@
+import path from 'path'
+
 export interface Production {
-  PORT?: string
-  MODE?: string
-  PROY_BD?: string
-  PROY_BD_HOST?: string
-  PROY_BD_USER?: string
-  PROY_BD_PASS?: string
-  PROY_BD_PORT?: string
-  SECRET_HIDDEN_KEY?: string
-  SEND_TRANSPORTER?: string
-  SENDER?: string
-  SENDER_PASS?: string
-  SENDER_ALIAS?: string
-  DIR?: string
-  CLIENT_ID?: string
-  SENDGRID_KEY?: string
-  PROY_BEURL?: string
-  PROY_FEURL?: string
-  
-  DIR_ASSETS?: string
-  ONE_SIGNAL_APP_ID?:string
-  ONE_SIGNAL_API_KEY?:string
+  PORT?: string;
+  MODE?: string;
+  PROY_BD?: string;
+  PROY_BD_HOST?: string;
+  PROY_BD_USER?: string;
+  PROY_BD_PASS?: string;
+  PROY_BD_PORT?: string;
+  SECRET_HIDDEN_KEY?: string;
+  SEND_TRANSPORTER?: string;
+  SENDER?: string;
+  SENDER_PASS?: string;
+  SENDER_ALIAS?: string;
+  DIR?: string;
+  CLIENT_ID?: string;
+  SENDGRID_KEY?: string;
+  PROY_BEURL?: string;
+  PROY_FEURL?: string;
+
+  DIR_ASSETS?: string;
+  ONE_SIGNAL_APP_ID?: string;
+  ONE_SIGNAL_API_KEY?: string;
 }
 export const production: Production = {
   MODE: process.env.NODE_ENV,
@@ -39,8 +41,10 @@ export const production: Production = {
 
   PROY_BEURL: process.env.PROY_BEURL,
   PROY_FEURL: process.env.PROY_FEURL,
-  
-    
+
+  DIR: path.join(__dirname, "../../"),
+  DIR_ASSETS: path.join(__dirname, "../../", "assets"),
+
   ONE_SIGNAL_APP_ID: process.env.ONE_SIGNAL_APP_ID,
-  ONE_SIGNAL_API_KEY: process.env.ONE_SIGNAL_API_KEY
-}
+  ONE_SIGNAL_API_KEY: process.env.ONE_SIGNAL_API_KEY,
+};

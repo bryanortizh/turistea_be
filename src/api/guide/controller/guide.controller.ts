@@ -29,7 +29,11 @@ export const findAllGuideController = async (
     });
     res.status(200).json(list);
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in findAllGuideController:", details, err);
+      return next(createError(400, details));
+    }
 
     next(createError(404, err));
   }
@@ -44,7 +48,11 @@ export const allGuideController = async (
     const list = await allGuides();
     res.status(200).json(list);
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in allGuideController:", details, err);
+      return next(createError(400, details));
+    }
     next(createError(404, err));
   }
 };
@@ -124,7 +132,7 @@ export const createGuideController = async (
           salt: salt.toString(),
           code_verification: code,
           date_of_birth: "1900-01-01",
-          state: false,
+          state: true,
         },
         password.toString()
       );
@@ -135,7 +143,11 @@ export const createGuideController = async (
       ...imagen,
     });
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in createGuideController:", details, err);
+      return next(createError(400, details));
+    }
     next(createError(404, err));
   }
 };
@@ -187,7 +199,11 @@ export const updateGuideController = async (
       ...imagen,
     });
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in updateGuideController:", details, err);
+      return next(createError(400, details));
+    }
     next(createError(404, err));
   }
 };
@@ -207,7 +223,11 @@ export const inactiveGuideController = async (
     });
     res.status(200).json(guide);
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in inactiveGuideController:", details, err);
+      return next(createError(400, details));
+    }
     next(createError(404, err));
   }
 };
@@ -221,7 +241,11 @@ export const findGuideByNameController = async (
     const guides = await findGuideByName(req.params.name);
     res.status(200).json(guides);
   } catch (err: any) {
-    if (err instanceof sequelize.ValidationError) next(createError(400, err));
+    if (err instanceof sequelize.ValidationError) {
+      const details = (err as any).errors?.map((e: any) => e.message).join("; ") || err.message;
+      console.error("Sequelize validation error in findGuideByNameController:", details, err);
+      return next(createError(400, details));
+    }
     next(createError(404, err));
   } 
 };
