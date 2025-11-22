@@ -27,6 +27,7 @@ export const createFormReserveController = async (
       ...req.body,
       id_user: user.userId,
       users_json: processedUsersJson,
+      status_form: 'pending',
       created_by: user.userId,
       updated_by: user.userId,
       created: new Date(),
@@ -136,11 +137,11 @@ export const changeFormReserveStatusController = async (
       return next(createError(404, "Formulario de reserva no encontrado"));
     }
 
-    if (formReserve.status_form !== "pendingpayinprocess") {
+    if (formReserve.status_form !== "pending_pay_in_process") {
       return next(
         createError(
           400,
-          `No se puede cambiar el estado. El formulario debe estar en estado 'pendingpayinprocess''. Estado actual: ${formReserve.status_form}`
+          `No se puede cambiar el estado. El formulario debe estar en estado 'pending_pay_in_process''. Estado actual: ${formReserve.status_form}`
         )
       );
     }
@@ -388,7 +389,7 @@ export const pendingSingToPendingPayFormReserveController = async (
     if (!formReserve) {
       return next(createError(404, "Formulario de reserva no encontrado"));
     }
-    if (formReserve.status_form !== "pending_pay") {
+    if (formReserve.status_form !== "pending_sign") {
       return next(
         createError(
           400,

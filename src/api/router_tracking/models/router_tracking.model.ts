@@ -6,6 +6,8 @@ export interface RouterTrackingAttributes {
   description?: string;
   name_district?: string;
   name_province?: string;
+  address_initial?: string;
+  address_final?: string;
   key_bgone?: string;
   size_bgone?: string;
   path_bgone?: string;
@@ -60,6 +62,14 @@ export function RouterTrackingFactory(
       },
       name_province: {
         type: DataTypes.STRING(200),
+      },
+      address_initial: {
+        type: DataTypes.STRING(300),
+        allowNull: true,
+      },
+      address_final: {
+        type: DataTypes.STRING(300),
+        allowNull: true,
       },
       key_bgone: {
         type: DataTypes.STRING(200),

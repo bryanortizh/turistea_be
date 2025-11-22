@@ -122,20 +122,6 @@ export const newPasswordAndCodeValidator = [
 
 
 export const updatePasswordUserValidator = [
-  // header('authorization').custom(accessOnlyAdminPrimary), //!ADMIN PRIMARY
-  
-  // body('current_password')
-  //   .isString()
-  //   .withMessage('Se require el current_password como string')
-  //   .bail()
-  //   .custom(validatePasswordAdmin)
-  //   .not()
-  //   .isEmpty()
-  //   .withMessage('No puede ser vacio')
-  //   .bail()
-  //   .isLength({ min: 1, max: 300 })
-  //   .withMessage('El minimo es 1 y el maximo es 300 letras'),
-    
   body('new_password')
     .isString()
     .withMessage('Se require new_password como string')
@@ -148,13 +134,6 @@ export const updatePasswordUserValidator = [
     .withMessage('El minimo es 6 y el maximo es 16 letras')
     .custom(SamePassword)
     .custom(RegexValidNewPassword),
-    // .custom((pass:string )=>{
-    //   const regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/)
-      
-    //   if(regex.test(pass) == false) throw new Error('Mínimo 8 caracteres al menos 1 alfabeto en mayúscula, 1 alfabeto en minúscula, 1 número y 1 carácter especial:')
-    // }),
-    // .not()
-  
   allValidator,
 ]
 
