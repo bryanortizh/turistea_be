@@ -151,7 +151,7 @@ export const createTerraceController = async (
           salt: salt.toString(),
           code_verification: code,
           date_of_birth: "1900-01-01",
-          state: false,
+          state: true,
         },
         password.toString()
       );

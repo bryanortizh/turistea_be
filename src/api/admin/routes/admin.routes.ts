@@ -25,7 +25,6 @@ import {
 import {
   validateCreateDriver,
   validateUniqueDriverFields,
-  validateUpdateDriver,
 } from "../../drivers/middlewares/drivers.validator";
 import {
   createPackageController,
@@ -41,7 +40,6 @@ import {
   inactiveGuideController,
   updateGuideController,
 } from "../../guide/controller/guide.controller";
-import { findAllGuide } from "../../guide/services/find/guide";
 import {
   allTerracesController,
   createTerraceController,
