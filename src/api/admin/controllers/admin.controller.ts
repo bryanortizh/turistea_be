@@ -68,6 +68,7 @@ export const findAllAdminController = async (
 
     const list = await findAllAdmin({
       page: Number(req.query.page),
+      state: Number(req.query.state),
       where: whereCondition,
       attributes: [
         "id",
@@ -78,6 +79,7 @@ export const findAllAdminController = async (
         "path",
         "created",
         "updated",
+        "state"
       ],
     });
     res.status(200).json(list);

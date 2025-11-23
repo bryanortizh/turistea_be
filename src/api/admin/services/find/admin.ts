@@ -51,16 +51,21 @@ export const findAllAdmin = async ({
   where,
   attributes,
   page,
+  state,
 }: {
   where?: WhereOptions<AdminAttributes>
   attributes?: FindAttributeOptions
   page: number
+  state: number
 }) => {
   try {
     const limit: number = 12
     const offset: number = 0 + (page - 1) * limit
     const { count, rows } = await DataBase.instance.admin.findAndCountAll({
-      where,
+      where: {
+        ...where,
+        state,
+      },
       attributes,
       include: [
         {

@@ -1,6 +1,7 @@
 import { DataBase } from "../../../database";
 import { findAdminByEmail, findOneAdmin } from "../services/find/admin";
 import CryptoJS from "crypto-js";
+import { Op } from 'sequelize'
 
 export const existsEmailOfAdmin = async (email: string): Promise<void> => {
   const _email = await findAdminByEmail({ email });
@@ -22,7 +23,7 @@ export const accessOnlyAdminPrimary = async (
   const admin = await findOneAdmin({
     where: {
       id: req.user.userId,
-      admin_rol_id: 1 || 2,
+      admin_rol_id: { [Op.in]: [1, 2] },
       state: 1,
     },
   });
@@ -36,7 +37,7 @@ export const validatePasswordAdmin = async (
   const admin = await DataBase.instance.admin.findOne({
     where: {
       id: req.user.userId,
-      admin_rol_id: 1 || 2,
+      admin_rol_id: { [Op.in]: [1, 2] },
       state: 1,
     },
   });
