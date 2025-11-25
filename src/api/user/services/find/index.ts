@@ -134,7 +134,63 @@ export const findOneUser = async (
 
 export const findAllPackage = async () => {
   try {
-    return await DataBase.instance.packages.findAll({});
+    const packages = await DataBase.instance.packages.findAll({
+      include: [
+        {
+          model: DataBase.instance.routerTracking,
+          // no `as` here so Sequelize will include by association default alias
+          attributes: ["name_district", "name_province"],
+          required: false,
+        },
+      ],
+    });
+
+    // Map result to include name_district and name_province in the package object
+    const mapped = (packages || []).map((pkg: any) => {
+      const plain = pkg.toJSON ? pkg.toJSON() : pkg;
+
+      // possible include keys depending on association alias and `as` usage
+      const routerKeys = [
+        "router_trackings",
+        "routerTrackings",
+        "router_tracking",
+        "routerTracking",
+      ];
+
+      let rt: any = null;
+      for (const key of routerKeys) {
+        if (plain[key]) {
+          rt = plain[key];
+          break;
+        }
+      }
+
+      // If the association is hasMany, rt may be an array
+      let name_district = null;
+      let name_province = null;
+      if (Array.isArray(rt) && rt.length > 0) {
+        name_district = rt[0].name_district || null;
+        name_province = rt[0].name_province || null;
+      } else if (rt) {
+        name_district = rt.name_district || null;
+        name_province = rt.name_province || null;
+      }
+
+      // Remove the nested router_tracking property (fix: don't return as separate object)
+      for (const key of routerKeys) {
+        if (plain[key]) {
+          delete plain[key];
+        }
+      }
+
+      return {
+        ...plain,
+        name_district,
+        name_province,
+      };
+    });
+
+    return mapped;
   } catch (err) {
     throw err;
   }
