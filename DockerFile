@@ -5,6 +5,6 @@ RUN rm -rf node_modules
 RUN npm install
 COPY . .
 RUN npm run build
-RUN mkdir dist/assets
+RUN [ -d dist/assets ] || mkdir -p dist/assets
 EXPOSE 5040
 CMD ["npm","start","PROD"]
