@@ -189,7 +189,7 @@ export const getRouterPackageByIdController = async (
 ) => {
   try {
     const packageId = Number(req.params.id);
-    const packageData = await DataBase.instance.routerTracking.findOne({
+    const packageData = await DataBase.instance.routerTracking.findAll({
       where: { id_package: packageId },
       attributes: {
         exclude: ["id_package", "createdAt", "updatedAt"],
