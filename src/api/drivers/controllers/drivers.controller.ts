@@ -36,7 +36,7 @@ export const findAllDriverController = async (
         { email: { [sequelize.Op.like]: `%${searchTerm}%` } },
         { cellphone: { [sequelize.Op.like]: `%${searchTerm}%` } },
         { number_document: { [sequelize.Op.like]: `%${searchTerm}%` } },
-        { license_plate: { [sequelize.Op.like]: `%${searchTerm}%` } },
+        { number_plate: { [sequelize.Op.like]: `%${searchTerm}%` } },
       ];
     }
 
