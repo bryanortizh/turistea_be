@@ -284,7 +284,7 @@ export const findUserFormReservesController = async (
     }
 
     if (state !== undefined) {
-      whereConditions.state = Boolean(Number(state));
+      whereConditions.state = 1
     }
 
     const result = await findAllFormReserve({
@@ -298,7 +298,6 @@ export const findUserFormReservesController = async (
       data: {
         page: result.page,
         count: result.count,
-        // Convertir a JSON plano y parsear users_json
         rows: result.rows.map((form: any) => {
           const plainForm = form.toJSON ? form.toJSON() : form;
           return {
