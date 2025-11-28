@@ -151,7 +151,7 @@ export const googleSignInController = async (
         userId,
         number_of_sessions,
       });
-      res.status(200).json(jwt);
+      res.status(200).json({results,jwt});
     } else {
       res.status(200).json(null);
     }
