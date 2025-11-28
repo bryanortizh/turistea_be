@@ -298,7 +298,6 @@ export const findUserFormReservesController = async (
       data: {
         page: result.page,
         count: result.count,
-        // Convertir a JSON plano y parsear users_json
         rows: result.rows.map((form: any) => {
           const plainForm = form.toJSON ? form.toJSON() : form;
           return {
