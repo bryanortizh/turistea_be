@@ -261,13 +261,9 @@ export const signInAdminService = async ({
 
 export const signInSocialNetworkService = async ({
   userId,
-  email,
-  password,
   number_of_sessions,
 }: {
   userId: number;
-  email: string;
-  password: string;
   number_of_sessions: number;
 }): Promise<any> => {
   try {
