@@ -135,12 +135,13 @@ export const findOneUser = async (
 export const findAllPackage = async () => {
   try {
     const packages = await DataBase.instance.packages.findAll({
+      where: { state: true },
       include: [
         {
           model: DataBase.instance.routerTracking,
-          // no `as` here so Sequelize will include by association default alias
           attributes: ["name_district", "name_province"],
           required: false,
+          where: { state: true },
         },
       ],
     });

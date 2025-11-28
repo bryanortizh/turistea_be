@@ -284,7 +284,7 @@ export const findUserFormReservesController = async (
     }
 
     if (state !== undefined) {
-      whereConditions.state = 1
+      whereConditions.state = Boolean(Number(state));
     }
 
     const result = await findAllFormReserve({
