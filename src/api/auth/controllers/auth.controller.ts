@@ -139,12 +139,53 @@ export const googleSignInController = async (
 ) => {
   try {
     const results = await googleSignInService(req.body.token);
-    res.status(200).json(results);
+    const userExisted = results.user.email
+      ? await findUserByEmailWithoutState({ email: results.user.email })
+      : null;
+
+    if (userExisted) {
+      let userId = userExisted.id as number;
+      let number_of_sessions = userExisted.number_of_sessions as number;
+
+      const jwt = await signInSocialNetworkService({
+        userId,
+        number_of_sessions,
+      });
+      res.status(200).json(jwt);
+    } else {
+      res.status(200).json(null);
+    }
   } catch (err: any) {
     if (err instanceof sequelize.ValidationError) next(createError(400, err));
     next(createError(404, err));
   }
 };
+
+export const validarEmailUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+    const userExisted = await findUserByEmailWithoutState({ email });
+    if (userExisted) {
+      let userId = userExisted.id as number;
+      let number_of_sessions = userExisted.number_of_sessions as number;
+
+      const jwt = await signInSocialNetworkService({
+        userId,
+        number_of_sessions,
+      });
+      res.status(200).json(jwt);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (err: any) {
+    next(createError(404, err));
+  }
+};
+
 export const signUpAdminController = async (
   req: Request,
   res: Response,
@@ -188,20 +229,10 @@ export const signInSocialNetworkController = async (
       sexo,
       password,
       dni,
-      key,
       date_of_birth,
       origin,
     } = req.body;
-    // res.status(200).json({
-    //   name,
-    //   lastname,
-    //   email,
-    //   cellphone,
-    //   sexo,
-    //   password,
-    //   dni,
-    //   date_of_birth
-    // })
+
     enum opt {
       max = 9998,
       min = 1001,
@@ -220,8 +251,6 @@ export const signInSocialNetworkController = async (
 
       const jwt = await signInSocialNetworkService({
         userId,
-        email,
-        password,
         number_of_sessions,
       });
       res.status(200).json(jwt);
@@ -243,38 +272,9 @@ export const signInSocialNetworkController = async (
       let number_of_sessions = user.number_of_sessions as number;
       const jwt = await signInSocialNetworkService({
         userId,
-        email,
-        password,
         number_of_sessions,
       });
       res.status(200).json(jwt);
-    }
-  } catch (err: any) {
-    next(createError(404, err));
-  }
-};
-
-export const validarEmailUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { email, password } = req.body;
-    const userExisted = await findUserByEmailWithoutState({ email });
-    if (userExisted) {
-      let userId = userExisted.id as number;
-      let number_of_sessions = userExisted.number_of_sessions as number;
-
-      const jwt = await signInSocialNetworkService({
-        userId,
-        email,
-        password,
-        number_of_sessions,
-      });
-      res.status(200).json(jwt);
-    } else {
-      res.status(200).json(null);
     }
   } catch (err: any) {
     next(createError(404, err));
@@ -293,40 +293,22 @@ export const signInSocialNetworkControllerWithoutValidation = async (
       email,
       path,
       cellphone,
-      sexo,
       password,
       dni,
-      date_of_birth,
       origin,
-      code_departamento,
-      code_provincia,
-      ubigeo,
-      name_departamento,
-      name_provincia,
-      name_distrito,
       key,
     } = req.body;
-    enum opt {
-      max = 9998,
-      min = 1001,
-    }
 
-    const gen = rn.generator({
-      min: opt.min,
-      max: opt.max,
-      integer: true,
-    });
-    // Validar si el correo ya tiene una cuenta ?
     var user = await createNewUser({
       name,
       lastname,
       email,
       cellphone,
-      sexo,
+      sexo: "no especificado",
       path,
       password,
       dni,
-      date_of_birth,
+      date_of_birth: "1900-01-01",
       state: true,
       origin,
       key,
@@ -335,8 +317,6 @@ export const signInSocialNetworkControllerWithoutValidation = async (
     let number_of_sessions = user.number_of_sessions as number;
     const jwt = await signInSocialNetworkService({
       userId,
-      email,
-      password,
       number_of_sessions,
     });
     res.status(200).json(jwt);
